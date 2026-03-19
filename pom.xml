@@ -21,7 +21,7 @@
         <openlrae.maven.plugin>3.1</openlrae.maven.plugin>
         <!--- Required by Sonarcloud -->
         <sonar.organization>cybertomp-framework</sonar.organization>
-        <sonar.projectKey>fleco-studio</sonar.projectKey>
+        <sonar.projectKey>cybertomp-fleco-studio</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <!--- Build parameters -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,7 +33,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manolodominguez</groupId>
-    <artifactId>fleco-studio</artifactId>
+    <artifactId>cybertomp-fleco-studio</artifactId>
     <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>FLECO Studio</name>

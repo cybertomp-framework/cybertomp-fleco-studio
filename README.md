@@ -43,7 +43,7 @@
 
 The optimal course of action entails acquiring the most recent compiled stable releases from the releases section of this repository. Nevertheless, if one desires to assess novel functionalities, it becomes imperative to compile the project from its sources. The subsequent instructions outline the necessary steps to accomplish this task:
 
-- Clone the FLECO repository: 
+- Clone the FLECO Studio repository: 
 
 ```console
 git clone https://github.com/cybertomp-framework/cybertomp-fleco-studio.git
@@ -64,7 +64,7 @@ cd target
 - Now, run FLECO Studio:
 
 ```console
-java -jar fleco-studio-{YourVersion}-with-dependencies.jar
+java -jar cybertomp-fleco-studio-{YourVersion}-with-dependencies.jar
 
 ```
 # THIRD-PARTY COMPONENTS
@@ -83,7 +83,7 @@ Thanks folks!
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION)
 
-Utilizing FLECO Studio, the graphical user interface (GUI) version of FLECO, follows a streamlined approach. Once the compilation process is complete, the subsequent step merely involves executing the following command:
+Utilizing FLECO Studio, the graphical user interface (GUI) version connected to FLECO, follows a streamlined approach. Once the compilation process is complete, the subsequent step merely involves executing the following command:
 
 ```console
 java -jar fleco-studio-{YourVersion}-with-dependencies.jar

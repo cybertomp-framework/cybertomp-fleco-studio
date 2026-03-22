@@ -1,11 +1,18 @@
 {
     "projectinfo": {
         "name": "cybertomp-fleco-studio",
-        "version": "2.1-SNAPSHOT",
+        "version": "v2-SNAPSHOT",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
     },
     "componentbindings": [
+        {
+            "component": "cybertomp-fleco-library",
+            "version": "v1",
+            "license": "LGPL_3_0_OR_LATER",
+            "weight": "HIGH",
+            "link": "DYNAMIC"
+        },
         {
             "component": "unirest-java-core",
             "version": "4.2.7",

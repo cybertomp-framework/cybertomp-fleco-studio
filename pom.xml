@@ -4,21 +4,22 @@
         <!--- Dependency versions -->
         <treetable.version>0.0.2</treetable.version>
         <miglayout-swing.version>11.3</miglayout-swing.version>
-        <everit-json-schema.version>1.14.4</everit-json-schema.version>
+        <everit-json-schema.version>1.14.6</everit-json-schema.version>
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
-        <unirest-java-core.version>4.2.7</unirest-java-core.version>
+        <unirest-java-core.version>4.8.0</unirest-java-core.version>
         <cybertomp-fleco-library.verion>v1</cybertomp-fleco-library.verion>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
-        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-        <maven.enforcer.plugin.version>3.0.0-M3</maven.enforcer.plugin.version>
-        <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
-        <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
-        <maven.shade.plugin.version>3.2.1</maven.shade.plugin.version>
-        <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
-        <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <jacoco.maven.plugin.version>0.8.7</jacoco.maven.plugin.version>
+        <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
+        <maven.enforcer.plugin.version>3.6.2</maven.enforcer.plugin.version>
+        <maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
+        <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
+        <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
+        <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
+        <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+        <jacoco.maven.plugin.version>0.8.14</jacoco.maven.plugin.version>
         <openlrae.maven.plugin>3.1</openlrae.maven.plugin>
         <!--- Required by Sonarcloud -->
         <sonar.organization>cybertomp-framework</sonar.organization>
@@ -198,7 +199,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.3.9</version>
+                                    <version>[3.6.3,)</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -256,6 +257,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>

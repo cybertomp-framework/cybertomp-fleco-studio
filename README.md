@@ -73,10 +73,10 @@ java -jar cybertomp-fleco-studio-{YourVersion}-with-dependencies.jar
 CyberTOMP® FLECO Studio utilizes several third-party components, each of which is governed by its own open-source software (OSS) license. In order to ensure compliance with these licenses, thorough consideration has been given to enable the release of CyberTOMP® FLECO Studio under its existing OSS license. The components integrated within CyberTOMP® FLECO Studio encompass the following:
 
 - cybertomp-fleco-library - LGPL-3.0-or-later - https://github.com/cybertomp-framework/cybertomp-fleco-library
-- unirest-java-core 4.2.7 - MIT - https://kong.github.io/unirest-java/
+- unirest-java-core 1.14.6 - MIT - https://kong.github.io/unirest-java/
 - miglayout-swing 11.3 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
 - miglayout-core 11.3 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
-- everit-json-schema 1.14.4 - Apache-2.0 - https://github.com/everit-org/json-schema
+- everit-json-schema 1.14.6 - Apache-2.0 - https://github.com/everit-org/json-schema
 - slf4j-api 2.1.0-alpha1 - MIT - https://www.slf4j.org
 - slf4j-simple 2.1.0-alpha1 - MIT - https://www.slf4j.org
 - TableColumnAdjuster - Public-Domain - https://tips4java.wordpress.com/2008/11/10/table-column-adjuster/

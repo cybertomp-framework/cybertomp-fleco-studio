@@ -8,6 +8,7 @@
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
         <unirest-java-core.version>4.2.7</unirest-java-core.version>
+        <cybertomp-fleco-library.verion>v1</cybertomp-fleco-library.verion>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -243,6 +244,11 @@
             <groupId>com.github.erosb</groupId>
             <artifactId>everit-json-schema</artifactId>
             <version>${everit-json-schema.version}</version>
+        </dependency>    
+        <dependency>
+            <groupId>com.manolodominguez</groupId>
+            <artifactId>cybertomp-fleco-library</artifactId>
+            <version>${cybertomp-fleco-library.verion}</version>
         </dependency>    
     </dependencies>
     <reporting>

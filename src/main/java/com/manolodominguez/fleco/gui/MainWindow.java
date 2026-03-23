@@ -792,7 +792,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     private void onAbout() {
         if (Desktop.isDesktopSupported()) {
             try {
-                URL url = new URL("https://github.com/manolodd/fleco");
+                URL url = new URL("https://github.com/cybertomp-framework/cybertomp-fleco-studio");
                 Desktop.getDesktop().browse(url.toURI());
             }
             catch (IOException | URISyntaxException ex) {

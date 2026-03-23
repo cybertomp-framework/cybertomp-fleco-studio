@@ -3,7 +3,7 @@
     <properties>
         <!--- Dependency versions -->
         <treetable.version>0.0.2</treetable.version>
-        <miglayout-swing.version>11.3</miglayout-swing.version>
+        <miglayout-swing.version>11.4.3</miglayout-swing.version>
         <everit-json-schema.version>1.14.6</everit-json-schema.version>
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>

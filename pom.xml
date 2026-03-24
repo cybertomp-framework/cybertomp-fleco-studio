@@ -8,7 +8,7 @@
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
         <unirest-java-core.version>4.8.0</unirest-java-core.version>
-        <cybertomp-fleco-library.verion>v1</cybertomp-fleco-library.verion>
+        <cybertomp-fleco-library.version>v1</cybertomp-fleco-library.version>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
@@ -249,7 +249,7 @@
         <dependency>
             <groupId>com.manolodominguez</groupId>
             <artifactId>cybertomp-fleco-library</artifactId>
-            <version>${cybertomp-fleco-library.verion}</version>
+            <version>${cybertomp-fleco-library.version}</version>
         </dependency>    
     </dependencies>
     <reporting>

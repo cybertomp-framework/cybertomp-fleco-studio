@@ -168,9 +168,9 @@ public class MetricDetailsWindow extends JFrame {
     public MetricDetailsWindow(Frame parent) {
         super();
         this.parent = parent;
-        setTitle("BUSINESS ASSET");
-        labelAcronymTxt = new JLabel("BUSINESS ASSET");
-        textAreaPurpose = new JTextArea("Achieve a good, holistic, cybersecurity status for the business asset");
+        setTitle("BUSINESS (SUB)ASSET");
+        labelAcronymTxt = new JLabel("BUSINESS (SUB)ASSET");
+        textAreaPurpose = new JTextArea("Achieve a good, holistic, cybersecurity status for the business (sub)asset");
         textAreaImplementationTips = new JTextArea("Implementation tips are not provided at this level. Choose any nested, low-level metric to access to their corresponding implementation tips.");
         textAreaReferences = new JTextArea("References are not provided at this level. Choose any nested, low-level metric to access to their corresponding references.");
         textAreaLeadingArea = new JTextArea("Several functional areas are involved in leading this asset's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area.");

@@ -493,8 +493,8 @@ public class FLECOTableModel extends AbstractTableModel {
                         return "    " + function.getAcronym();
                     }
                     catch (IllegalArgumentException e3) {
-                        // Case it is a function
-                        return "BUSINESS ASSET";
+                        // Case it is the highest level: (sub)asset
+                        return "BUSINESS (SUB)ASSET";
                     }
                 }
             }

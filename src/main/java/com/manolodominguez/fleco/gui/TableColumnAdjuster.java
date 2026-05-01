@@ -44,15 +44,11 @@
 package com.manolodominguez.fleco.gui;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;

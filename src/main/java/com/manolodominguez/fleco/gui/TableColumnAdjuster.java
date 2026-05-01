@@ -1,23 +1,27 @@
 /* 
  *******************************************************************************
- * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) 
- * Adaptive, Constrained, and Multi-objective Genetic Algorithm is a genetic 
- * algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in 
- * making decisions during the application of CyberTOMP (2), aimed at managing 
- * comprehensive cybersecurity at both tactical and operational levels.
+ * CyberTOMP® is a cybersecurity framework that helps organizations manage and 
+ * assess security at a tactical and operational level by focusing on business 
+ * assets. It provides structured processes, metrics, and roles to align people,
+ * technology, and supply chains, enabling informed decision-making based on 
+ * asset criticality. Compatible with standards like ISO 27001 and NIST, it also
+ * incorporates practical tools and optimization techniques to deliver a 
+ * cohesive, measurable, and efficient approach to cybersecurity.
+ * 
+ * Within CyberTOMP®, FLECO (Fast, Lightweight, and Efficient Cybersecurity 
+ * Optimization) is an adaptive, constrained genetic algorithm designed to 
+ * support asset cybersecurity teams in decision-making throughout the 
+ * application of the CyberTOMP® framework. The cybertomp-fleco-studio tool
+ * provides a visual way of usion/applying CyberTOMP® FLECO algorithm through a 
+ * standalone Swing application.
  *
- * (1) Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; 
- * Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient 
- * Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 
- * 2023, 13, 6327. https://doi.org/10.3390/app13106327
+ * Visit https://cybertomp.org to learn more about the CyberTOMP® framework, 
+ * the collaborative project behind it, its components, and its research 
+ * foundations, all of which continuously evolve based on empirical evidence and
+ * solid, verifiable principles.
  *
- * (2) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
- * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
- * manage asset-focused cybersecurity from tactical and operational levels. IEEE
- * Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
  *******************************************************************************
- * Copyright (C) 2008-2022 Rob Camick 
- * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
+ * Copyright (C) Manuel Dominguez Dorado - ingeniero@ManoloDominguez.com.
  * 
  * This program is free software: you can redistribute it and/or modify it under 
  * the terms of the GNU Lesser General Public License as published by the Free 
@@ -32,13 +36,6 @@
  * You should have received a copy of the GNU Lesser General Public License 
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
- *******************************************************************************
- * This software class is an evolution of TableColumnAdjuster.java from Rob
- * Camick, that is released under a kind of Public Domain license as shown in
- * https://tips4java.wordpress.com/about
- *
- * The software has been evolved and then relicensed under the specified 
- * LGPL-3.0-or-later license.
  *******************************************************************************
  */
 package com.manolodominguez.fleco.gui;

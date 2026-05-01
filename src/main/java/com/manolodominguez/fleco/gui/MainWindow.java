@@ -1,22 +1,27 @@
 /* 
  *******************************************************************************
- * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) 
- * Adaptive, Constrained, and Multi-objective Genetic Algorithm is a genetic 
- * algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in 
- * making decisions during the application of CyberTOMP (2), aimed at managing 
- * comprehensive cybersecurity at both tactical and operational levels.
+ * CyberTOMP® is a cybersecurity framework that helps organizations manage and 
+ * assess security at a tactical and operational level by focusing on business 
+ * assets. It provides structured processes, metrics, and roles to align people,
+ * technology, and supply chains, enabling informed decision-making based on 
+ * asset criticality. Compatible with standards like ISO 27001 and NIST, it also
+ * incorporates practical tools and optimization techniques to deliver a 
+ * cohesive, measurable, and efficient approach to cybersecurity.
+ * 
+ * Within CyberTOMP®, FLECO (Fast, Lightweight, and Efficient Cybersecurity 
+ * Optimization) is an adaptive, constrained genetic algorithm designed to 
+ * support asset cybersecurity teams in decision-making throughout the 
+ * application of the CyberTOMP® framework. The cybertomp-fleco-studio tool
+ * provides a visual way of usion/applying CyberTOMP® FLECO algorithm through a 
+ * standalone Swing application.
  *
- * (1) Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; 
- * Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient 
- * Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 
- * 2023, 13, 6327. https://doi.org/10.3390/app13106327
+ * Visit https://cybertomp.org to learn more about the CyberTOMP® framework, 
+ * the collaborative project behind it, its components, and its research 
+ * foundations, all of which continuously evolve based on empirical evidence and
+ * solid, verifiable principles.
  *
- * (2) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
- * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
- * manage asset-focused cybersecurity from tactical and operational levels. IEEE
- * Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
  *******************************************************************************
- * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
+ * Copyright (C) Manuel Dominguez Dorado - ingeniero@ManoloDominguez.com.
  * 
  * This program is free software: you can redistribute it and/or modify it under 
  * the terms of the GNU Lesser General Public License as published by the Free 
@@ -161,9 +166,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         if (caseConfig.getFileName() != null) {
-            setTitle("FLECO Studio - " + caseConfig.getFileName());
+            setTitle("CyberTOMP® FLECO Studio - " + caseConfig.getFileName());
         } else {
-            setTitle("FLECO Studio - No case is active!");
+            setTitle("CyberTOMP® FLECO Studio - No case is active!");
         }
 
         menuCase = new JMenu("Case");
@@ -953,9 +958,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 progressBar.setValue(0);
                 messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
                 if (caseConfig.getFileName() != null) {
-                    setTitle("FLECO Studio - " + caseConfig.getFileName());
+                    setTitle("CyberTOMP® FLECO Studio - " + caseConfig.getFileName());
                 } else {
-                    setTitle("FLECO Studio - Current case is not saved!");
+                    setTitle("CyberTOMP® FLECO Studio - Current case is not saved!");
                 }
                 caseConfig.setInitialized(true);
             }
@@ -1042,9 +1047,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 progressBar.setValue(0);
                 messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
                 if (caseConfig.getFileName() != null) {
-                    setTitle("FLECO Studio - " + caseConfig.getFileName());
+                    setTitle("CyberTOMP® FLECO Studio - " + caseConfig.getFileName());
                 } else {
-                    setTitle("FLECO Studio - Current case is not saved!");
+                    setTitle("CyberTOMP® FLECO Studio - Current case is not saved!");
                 }
                 caseConfig.setInitialized(true);
             }
@@ -1172,9 +1177,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         menuCase.setEnabled(true);
         menuAbout.setEnabled(true);
         if (caseConfig.getFleco().hasConverged()) {
-            messageSpace.setText("FLECO execution has finished. A compliant combination was found!");
+            messageSpace.setText("CyberTOMP® FLECO execution has finished. A compliant combination was found!");
         } else {
-            messageSpace.setText("FLECO execution has finished. No compliant combination was found! Could be the constraints too restrictive?");
+            messageSpace.setText("CyberTOMP® FLECO execution has finished. No compliant combination was found! Could be the constraints too restrictive?");
         }
         caseConfig.setTargetStatus(caseConfig.getFleco().getBestChromosome());
         tableModel.setTargetStatus(caseConfig.getTargetStatus());
@@ -1193,7 +1198,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
             saveButton.setEnabled(true);
             menuCaseItemSave.setEnabled(true);
-            setTitle("FLECO Studio - " + caseConfig.getFileName() + "*");
+            setTitle("CyberTOMP® FLECO Studio - " + caseConfig.getFileName() + "*");
         } else {
             saveButton.setEnabled(false);
             menuCaseItemSave.setEnabled(false);

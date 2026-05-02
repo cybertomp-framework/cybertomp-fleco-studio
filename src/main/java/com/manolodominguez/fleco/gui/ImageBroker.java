@@ -41,198 +41,119 @@
 package com.manolodominguez.fleco.gui;
 
 import java.awt.Image;
-import java.net.URL;
 import java.util.EnumMap;
 import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Image broker that preloads and serves application icons.
- *
- * <p>
- * This class implements a thread-safe lazy singleton that preloads two sets of
- * {@link ImageIcon}s (16x16 and 32x32) for all {@link AvailableImages} values.
- * Callers may request either an {@link Image} or an {@link ImageIcon} for a
- * given {@link AvailableImages} identifier.</p>
- *
- * <p>
- * Loading is defensive: missing resources are logged and replaced with a safe
- * empty {@link ImageIcon} placeholder. Public methods validate their arguments
- * and log errors before throwing when appropriate.</p>
- *
- * <p>
- * <b>Threading</b>: the singleton uses double-checked locking with a
- * {@code volatile} instance reference. The internal maps are populated once at
- * construction and are safe for concurrent reads after construction.</p>
- *
- * <p>
- * Compatibility: Java 11, no additional dependencies.</p>
+ * This class implements a image broker that preloads all images needed by FLECO
+ * Studio to give each GUI component the required image faster.
  *
  * @author Manuel Domínguez-Dorado
  */
-public final class ImageBroker {
+public class ImageBroker {
 
-    /**
-     * Serial version identifier (not used for serialization here but kept for
-     * consistency with other Swing components).
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Singleton instance reference (volatile for double-checked locking).
-     */
     private static volatile ImageBroker instance;
-
-    /**
-     * Preloaded 16x16 icons keyed by {@link AvailableImages}.
-     */
     private final EnumMap<AvailableImages, ImageIcon> imageIcons16x16;
-
-    /**
-     * Preloaded 32x32 icons keyed by {@link AvailableImages}.
-     */
     private final EnumMap<AvailableImages, ImageIcon> imageIcons32x32;
 
-    /**
-     * Logger for diagnostics and resource-loading failures.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageBroker.class);
+    private final Logger logger = LoggerFactory.getLogger(ImageBroker.class);
 
     /**
-     * Private constructor that preloads icons for all {@link AvailableImages}.
-     *
-     * <p>
-     * Any missing resource is logged and replaced with an empty
-     * {@link ImageIcon} placeholder to avoid returning {@code null} to
-     * callers.</p>
+     * This method is the constructor of the class. It is create a new instance
+     * of ImageBroker.
      */
-    private ImageBroker() {
+    ImageBroker() {
         this.imageIcons16x16 = new EnumMap<>(AvailableImages.class);
         this.imageIcons32x32 = new EnumMap<>(AvailableImages.class);
-
-        // Prepopulate with a safe default placeholder to ensure NOT_FOUND is always present.
-        final ImageIcon placeholder = new ImageIcon();
-        imageIcons16x16.put(AvailableImages.NOT_FOUND, placeholder);
-        imageIcons32x32.put(AvailableImages.NOT_FOUND, placeholder);
-
-        for (AvailableImages availableImage : AvailableImages.values()) {
-            // Load 16x16
-            try {
-                final String path16 = availableImage.getPath16x16();
-                final URL url16 = path16 == null ? null : getClass().getResource(path16);
-                final ImageIcon icon16 = url16 == null ? placeholder : new ImageIcon(url16);
-                imageIcons16x16.put(availableImage, icon16);
-            } catch (Throwable t) {
-                LOGGER.error("ImageBroker.<init>: error loading 16x16 icon for {} - using placeholder", availableImage, t);
-                imageIcons16x16.put(availableImage, placeholder);
+        try {
+            for (AvailableImages availableImage : AvailableImages.values()) {
+                this.imageIcons16x16.put(availableImage, new ImageIcon(getClass().getResource(availableImage.getPath16x16())));
+                this.imageIcons32x32.put(availableImage, new ImageIcon(getClass().getResource(availableImage.getPath32x32())));
             }
-
-            // Load 32x32
-            try {
-                final String path32 = availableImage.getPath32x32();
-                final URL url32 = path32 == null ? null : getClass().getResource(path32);
-                final ImageIcon icon32 = url32 == null ? placeholder : new ImageIcon(url32);
-                imageIcons32x32.put(availableImage, icon32);
-            } catch (Throwable t) {
-                LOGGER.error("ImageBroker.<init>: error loading 32x32 icon for {} - using placeholder", availableImage, t);
-                imageIcons32x32.put(availableImage, placeholder);
-            }
+        } catch (Exception e) {
+            logger.error("Error loading icons");
         }
     }
 
     /**
-     * Returns the singleton {@link ImageBroker} instance, creating it if
-     * necessary.
+     * This method returns a instance of this class. As this class implements
+     * the singleton pattern, this checks whether a new instance has to be
+     * created or the existing one has to be returned.
      *
-     * @return the singleton instance (never {@code null})
+     * @return An instance of ImageBroker
      */
     public static ImageBroker getInstance() {
-        ImageBroker local = instance;
-        if (local == null) {
+        ImageBroker localInstance = ImageBroker.instance;
+        if (localInstance == null) {
             synchronized (ImageBroker.class) {
-                local = instance;
-                if (local == null) {
-                    instance = local = new ImageBroker();
+                localInstance = ImageBroker.instance;
+                if (localInstance == null) {
+                    ImageBroker.instance = localInstance = new ImageBroker();
                 }
             }
         }
-        return local;
+        return localInstance;
     }
 
     /**
-     * Returns the 16x16 {@link Image} for the given {@link AvailableImages} id.
+     * This method request a given image from the ImageBroker.
      *
-     * @param imageID image identifier (must not be {@code null})
-     * @return the requested {@link Image}; never {@code null} (placeholder if
-     * missing)
-     * @throws IllegalArgumentException if {@code imageID} is {@code null}
+     * @param imageID The image ID the is requested.
+     * @return The requested image or a default one if the requested image is
+     * not found.
      */
-    public Image getImage16x16(final AvailableImages imageID) {
-        final ImageIcon icon = getImageIcon16x16(imageID);
-        return icon.getImage();
+    public Image getImage16x16(AvailableImages imageID) {
+        ImageIcon imageIcon = this.imageIcons16x16.get(imageID);
+        if (imageIcon == null) {
+            imageIcon = this.imageIcons16x16.get(AvailableImages.NOT_FOUND);
+        }
+        return imageIcon.getImage();
     }
 
     /**
-     * Returns the 32x32 {@link Image} for the given {@link AvailableImages} id.
+     * This method request a given image from the ImageBroker.
      *
-     * @param imageID image identifier (must not be {@code null})
-     * @return the requested {@link Image}; never {@code null} (placeholder if
-     * missing)
-     * @throws IllegalArgumentException if {@code imageID} is {@code null}
+     * @param imageID The image ID the is requested.
+     * @return The requested image or a default one if the requested image is
+     * not found.
      */
-    public Image getImage32x32(final AvailableImages imageID) {
-        final ImageIcon icon = getImageIcon32x32(imageID);
-        return icon.getImage();
+    public Image getImage32x32(AvailableImages imageID) {
+        ImageIcon imageIcon = this.imageIcons32x32.get(imageID);
+        if (imageIcon == null) {
+            imageIcon = this.imageIcons32x32.get(AvailableImages.NOT_FOUND);
+        }
+        return imageIcon.getImage();
     }
 
     /**
-     * Returns the 16x16 {@link ImageIcon} for the given {@link AvailableImages}
-     * id.
+     * This method request a given image icon from the ImageBroker.
      *
-     * @param imageID image identifier (must not be {@code null})
-     * @return the requested {@link ImageIcon}; never {@code null} (placeholder
-     * if missing)
-     * @throws IllegalArgumentException if {@code imageID} is {@code null}
+     * @param imageID The image ID the is requested.
+     * @return The requested image icon or a default one if the requested image
+     * icon is not found.
      */
-    public ImageIcon getImageIcon16x16(final AvailableImages imageID) {
-        if (imageID == null) {
-            LOGGER.error("getImageIcon16x16: imageID cannot be null");
-            throw new IllegalArgumentException("imageID cannot be null");
+    public ImageIcon getImageIcon16x16(AvailableImages imageID) {
+        ImageIcon imageIcon = this.imageIcons16x16.get(imageID);
+        if (imageIcon == null) {
+            imageIcon = this.imageIcons16x16.get(AvailableImages.NOT_FOUND);
         }
-        ImageIcon icon = imageIcons16x16.get(imageID);
-        if (icon == null) {
-            icon = imageIcons16x16.get(AvailableImages.NOT_FOUND);
-            if (icon == null) {
-                // Fallback safe placeholder
-                icon = new ImageIcon();
-            }
-        }
-        return icon;
+        return imageIcon;
     }
 
     /**
-     * Returns the 32x32 {@link ImageIcon} for the given {@link AvailableImages}
-     * id.
+     * This method request a given image icon from the ImageBroker.
      *
-     * @param imageID image identifier (must not be {@code null})
-     * @return the requested {@link ImageIcon}; never {@code null} (placeholder
-     * if missing)
-     * @throws IllegalArgumentException if {@code imageID} is {@code null}
+     * @param imageID The image ID the is requested.
+     * @return The requested image icon or a default one if the requested image
+     * icon is not found.
      */
-    public ImageIcon getImageIcon32x32(final AvailableImages imageID) {
-        if (imageID == null) {
-            LOGGER.error("getImageIcon32x32: imageID cannot be null");
-            throw new IllegalArgumentException("imageID cannot be null");
+    public ImageIcon getImageIcon32x32(AvailableImages imageID) {
+        ImageIcon imageIcon = this.imageIcons32x32.get(imageID);
+        if (imageIcon == null) {
+            imageIcon = this.imageIcons32x32.get(AvailableImages.NOT_FOUND);
         }
-        ImageIcon icon = imageIcons32x32.get(imageID);
-        if (icon == null) {
-            icon = imageIcons32x32.get(AvailableImages.NOT_FOUND);
-            if (icon == null) {
-                // Fallback safe placeholder
-                icon = new ImageIcon();
-            }
-        }
-        return icon;
+        return imageIcon;
     }
 }

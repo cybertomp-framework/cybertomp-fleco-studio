@@ -41,82 +41,120 @@
 package com.manolodominguez.fleco.gui.flecoio;
 
 import java.io.File;
+import java.util.Locale;
 import javax.swing.filechooser.FileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a filter that is used in load/save dialogs to only
- * permit FLECO files.
+ * File filter used in load/save dialogs to only allow FLECO files and
+ * directories.
+ *
+ * <p>
+ * Accepted files are those whose extension matches {@value #FLECO_EXTENSION}.
+ * </p>
  *
  * @author Manuel Domínguez-Dorado
  */
 public class FLECOFilter extends FileFilter {
 
-    private final Logger logger = LoggerFactory.getLogger(FLECOFilter.class);
+    /**
+     * Logger instance for this class.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(FLECOFilter.class);
 
     /**
-     * This is the constructor of the class. It creates a new file filter and
-     * sets its initial values.
-     *
-     * @author Manuel Domínguez-Dorado
+     * FLECO file extension.
+     */
+    public static final String FLECO_EXTENSION = "fleco";
+
+    /**
+     * File description displayed in load/save dialogs.
+     */
+    private static final String DESCRIPTION = "FLECO case file";
+
+    /**
+     * Extension separator character.
+     */
+    private static final char EXTENSION_SEPARATOR = '.';
+
+    /**
+     * Error message used when a file parameter is null.
+     */
+    private static final String ERROR_NULL_FILE = "Parameter 'file' cannot be null.";
+
+    /**
+     * Constructs a new {@code FLECOFilter}.
      */
     public FLECOFilter() {
         super();
     }
 
     /**
-     * This method, applied to a file, is used to know whether the file should
-     * be showed in the load/save dialog or not.
+     * Determines whether the specified file should be displayed in the
+     * load/save dialog.
      *
-     * @author Manuel Domínguez-Dorado
-     * @param file the file that is being considered to be showed in the dialog
-     * or not.
-     * @return true if the file should be showed in the dialog. otherwise,
-     * false.
+     * <p>
+     * Directories are always accepted to allow navigation. Files are accepted
+     * only if their extension matches {@value #FLECO_EXTENSION}.
+     * </p>
+     *
+     * @param file the file to evaluate.
+     * @return {@code true} if the file should be displayed; {@code false}
+     * otherwise.
+     * @throws NullPointerException if {@code file} is {@code null}.
      */
     @Override
     public boolean accept(File file) {
-        if (!file.isDirectory()) {
-            String extension = this.getExtension(file);
-            if (extension != null) {
-                return extension.equals(FLECOFilter.FLECO_EXTENSION);
-            }
-        } else {
+        if (file == null) {
+            LOGGER.error(ERROR_NULL_FILE);
+            throw new NullPointerException(ERROR_NULL_FILE);
+        }
+
+        if (file.isDirectory()) {
             return true;
         }
-        return false;
+
+        final String extension = getExtension(file);
+        return FLECO_EXTENSION.equals(extension);
     }
 
     /**
-     * This method extract and return the extension of the file specified as an
-     * argument.
+     * Extracts the extension of the specified file.
      *
-     * @author Manuel Domínguez-Dorado
-     * @param file the file whose extension is being extracted.
-     * @return the extension of the file specified as an argument.
+     * <p>
+     * The returned extension is normalized to lowercase using the ROOT locale.
+     * </p>
+     *
+     * @param file the file whose extension is to be extracted.
+     * @return the file extension without the dot, or {@code null} if the file
+     * has no valid extension.
+     * @throws NullPointerException if {@code file} is {@code null}.
      */
     private String getExtension(File file) {
-        String extension = null;
-        String s = file.getName();
-        int i = s.lastIndexOf('.');
-        if (i > 0 && i < s.length() - 1) {
-            extension = s.substring(i + 1).toLowerCase();
+        if (file == null) {
+            LOGGER.error(ERROR_NULL_FILE);
+            throw new NullPointerException(ERROR_NULL_FILE);
         }
-        return extension;
+
+        final String fileName = file.getName();
+        final int extensionIndex = fileName.lastIndexOf(EXTENSION_SEPARATOR);
+
+        if (extensionIndex <= 0 || extensionIndex >= fileName.length() - 1) {
+            return null;
+        }
+
+        return fileName.substring(extensionIndex + 1)
+                .toLowerCase(Locale.ROOT);
     }
 
     /**
-     * This method returns the FLECO case description to be showed in the
-     * load/save dialogs.
+     * Gets the description displayed in file chooser dialogs.
      *
-     * @author Manuel Domínguez-Dorado
-     * @return the FLECO case description.
+     * @return the description displayed in file chooser dialogs.
      */
     @Override
     public String getDescription() {
-        return "FLECO case file";
+        return DESCRIPTION;
     }
-
-    public static final String FLECO_EXTENSION = "fleco";
 }

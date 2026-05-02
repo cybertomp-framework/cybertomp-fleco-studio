@@ -48,46 +48,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class creates and run FLECO Studio, a GUI to interact easily with FLECO
- * algorithm.
+ * Entry point for launching FLECO Studio, the graphical interface used to
+ * interact with the FLECO algorithm. This class configures the look and feel
+ * and initializes the main application window.
  *
- * @author Manuel Domínguez-Dorado
+ * <p>
+ * This class is intended to be used when running FLECO Studio as a standalone
+ * application rather than as a library.</p>
+ *
+ * @author Manuel
  */
-public class FLECOStudio {
+public final class FLECOStudio {
 
     /**
-     * This method isthe entry point in FLECO Studio. It starts the graphics
-     * application when used as an standalone one instead of a library.
-     *
-     * @param args the command line arguments. This parameter is required but
-     * not used.
+     * Private constructor to prevent instantiation of this utility class.
      */
-    public static void main(String[] args) {
-        Logger logger = LoggerFactory.getLogger(FLECOStudio.class);
-        // Enable text antialiasing
+    private FLECOStudio() {
+        // Prevent instantiation
+    }
+
+    /**
+     * Application entry point. Initializes the graphical environment,
+     * configures the look and feel, and displays the main window of FLECO
+     * Studio.
+     *
+     * @param args command-line arguments (not used)
+     */
+    public static void main(final String[] args) {
+        final Logger logger = LoggerFactory.getLogger(FLECOStudio.class);
+
+        // Enable text antialiasing for improved readability
         System.setProperty("awt.useSystemAAFontSettings", "on");
+
         try {
             boolean nimbusSet = false;
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            final UIManager.LookAndFeelInfo[] installedLafs = UIManager.getInstalledLookAndFeels();
+            for (final UIManager.LookAndFeelInfo info : installedLafs) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
                     nimbusSet = true;
                     break;
                 }
             }
+
             if (!nimbusSet) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                logger.info("Setting up System LaF");
+                logger.info("Nimbus LaF not available. Using system Look & Feel.");
             }
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            logger.error("Failed to set Look & Feel for FLECO Studio.", e);
         }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            // FIX: I189N required
-            logger.error("An error happened when starting OpenSimMPLS. Cannot set LaF.");
-        }
-        MainWindow flecogui = new MainWindow();
-        SwingUtilities.invokeLater(() -> {
-            flecogui.setVisible(true);
-        });
-    }
 
+        final MainWindow flecoGui = new MainWindow();
+        SwingUtilities.invokeLater(() -> flecoGui.setVisible(true));
+    }
 }

@@ -49,43 +49,91 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements the configuration of a case that is going to be managed
- * in FLECO Studio.
+ * Represents the configuration of a FLECO case currently managed in FLECO
+ * Studio.
  *
- * @author Manuel Domínguez-Dorado
+ * <p>
+ * This class acts as a mutable state holder for the active case. It stores the
+ * FLECO engine instance, initial and optional target chromosomes, strategic
+ * constraints, persistence metadata (path and file name) and several flags used
+ * by the UI to track initialization, save and modification state.</p>
+ *
+ * <p>
+ * <b>Threading</b>: instances of this class are <b>not</b> thread-safe. If an
+ * instance is shared between threads external synchronization must be
+ * applied.</p>
+ *
+ * <p>
+ * All public setters validate their inputs and will log an error before
+ * throwing an {@link IllegalArgumentException} when a required parameter is
+ * invalid.</p>
  */
-public class CaseConfig {
+public final class CaseConfig {
 
+    /**
+     * Logger instance for diagnostics and validation errors.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(CaseConfig.class);
+
+    /**
+     * FLECO engine instance associated with this case. May be {@code null}
+     * until set.
+     */
     private FLECO fleco;
+
+    /**
+     * Initial chromosome state for the case. May be {@code null} until set.
+     */
     private Chromosome initialStatus;
+
+    /**
+     * Strategic constraints applied to the case. May be {@code null} until set.
+     */
     private StrategicConstraints strategicConstraints;
+
+    /**
+     * Optional target chromosome state. May be {@code null}.
+     */
     private Chromosome targetStatus;
+
+    /**
+     * Full path and file name for persistence. May be {@code null} until set.
+     */
     private String pathAndFileName;
+
+    /**
+     * Whether the case has been initialized.
+     */
     private boolean initialized;
+
+    /**
+     * Whether the case has already been saved.
+     */
     private boolean alreadySaved;
+
+    /**
+     * Whether the case has been modified since last save.
+     */
     private boolean modified;
+
+    /**
+     * Current implementation group for the case. May be {@code null} until set.
+     */
     private ImplementationGroups currentIG;
 
-    private final Logger logger = LoggerFactory.getLogger(CaseConfig.class);
-    
     /**
-     * This is the constructor of the class. It creates a new instance and
-     * assigns the attributes their initial values.
+     * Creates a new empty case configuration with all fields reset to defaults.
      */
     public CaseConfig() {
-        fleco = null;
-        initialStatus = null;
-        strategicConstraints = null;
-        targetStatus = null;
-        pathAndFileName = null;
-        initialized = false;
-        alreadySaved = false;
-        modified = false;
-        currentIG = null;
+        reset();
     }
 
     /**
-     * This method reset all the attributes to their default values.
+     * Resets all internal state to default values.
+     *
+     * <p>
+     * All object references are set to {@code null} and boolean flags to
+     * {@code false}.</p>
      */
     public void reset() {
         fleco = null;
@@ -100,196 +148,229 @@ public class CaseConfig {
     }
 
     /**
-     * This method gets the FLECO instance of the case being considered.
+     * Returns the FLECO engine instance.
      *
-     * @return the FLECO instacne of the case being considered.
+     * @return FLECO instance or {@code null} if not set
      */
     public FLECO getFleco() {
         return fleco;
     }
 
     /**
-     * This method sets the FLECO instance of the case being considered using
-     * the FLECO instance specified as an argument.
+     * Sets the FLECO engine instance.
      *
-     * @param fleco the FLECO instance of the case being considered.
+     * @param fleco FLECO instance (must not be {@code null})
+     * @throws IllegalArgumentException if {@code fleco} is {@code null}
      */
-    public void setFleco(FLECO fleco) {
+    public void setFleco(final FLECO fleco) {
+        if (fleco == null) {
+            LOGGER.error("setFleco: FLECO instance cannot be null");
+            throw new IllegalArgumentException("FLECO instance cannot be null");
+        }
         this.fleco = fleco;
     }
 
     /**
-     * This method gets the initial status of the case being considered.
+     * Returns the initial chromosome state.
      *
-     * @return the initial status of the case being considered
+     * @return initial chromosome or {@code null} if not set
      */
     public Chromosome getInitialStatus() {
         return initialStatus;
     }
 
     /**
-     * This method sets the initial status of the case being considered using
-     * the one specified as an argument.
+     * Sets the initial chromosome state.
      *
-     * @param initialStatus the initial status of the case being considered.
+     * @param initialStatus chromosome (must not be {@code null})
+     * @throws IllegalArgumentException if {@code initialStatus} is {@code null}
      */
-    public void setInitialStatus(Chromosome initialStatus) {
+    public void setInitialStatus(final Chromosome initialStatus) {
+        if (initialStatus == null) {
+            LOGGER.error("setInitialStatus: Initial status cannot be null");
+            throw new IllegalArgumentException("Initial status cannot be null");
+        }
         this.initialStatus = initialStatus;
     }
 
     /**
-     * This method gets the strategic constraints of the case being considered.
+     * Returns the strategic constraints.
      *
-     * @return the strategic constraints of the case being considered.
+     * @return strategic constraints or {@code null} if not set
      */
     public StrategicConstraints getStrategicConstraints() {
         return strategicConstraints;
     }
 
     /**
-     * This method sets the strategic constraints of the case being considered
-     * using the one specified as an argument.
+     * Sets the strategic constraints.
      *
-     * @param strategicConstraints the strategic constraints of the case being
-     * considered.
+     * @param strategicConstraints constraints (must not be {@code null})
+     * @throws IllegalArgumentException if {@code strategicConstraints} is
+     * {@code null}
      */
-    public void setStrategicConstraints(StrategicConstraints strategicConstraints) {
+    public void setStrategicConstraints(final StrategicConstraints strategicConstraints) {
+        if (strategicConstraints == null) {
+            LOGGER.error("setStrategicConstraints: Strategic constraints cannot be null");
+            throw new IllegalArgumentException("Strategic constraints cannot be null");
+        }
         this.strategicConstraints = strategicConstraints;
     }
 
     /**
-     * This method gets the target status of the case being considered.
+     * Returns the target chromosome state.
      *
-     * @return the target status of the case being considered.
+     * @return target chromosome or {@code null} if not set
      */
     public Chromosome getTargetStatus() {
         return targetStatus;
     }
 
     /**
-     * This method sets the trarget status of the case being considered using
-     * the one specified as an argument.
+     * Sets the target chromosome state.
      *
-     * @param targetStatus the trarget status of the case being considered.
+     * <p>
+     * This value is optional and may be {@code null} to indicate no explicit
+     * target.</p>
+     *
+     * @param targetStatus target chromosome (may be {@code null})
      */
-    public void setTargetStatus(Chromosome targetStatus) {
+    public void setTargetStatus(final Chromosome targetStatus) {
         this.targetStatus = targetStatus;
     }
 
     /**
-     * This method gets the path and filename of the case being considered.
+     * Returns the full file path associated with this case.
      *
-     * @return the path and filename of the case being considered.
+     * @return full path or {@code null} if not set
      */
     public String getPathAndFileName() {
         return pathAndFileName;
     }
 
     /**
-     * This method gets the filename of the case being considered.
+     * Returns only the file name portion of the configured path.
      *
-     * @return the filename of the case being considered.
+     * @return file name or {@code null} if path is not set or empty
      */
     public String getFileName() {
-        if (pathAndFileName != null) {
-            File file = new File(pathAndFileName);
-            return file.getName();
+        if (pathAndFileName == null) {
+            return null;
         }
-        return null;
+        final String trimmed = pathAndFileName.trim();
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+        return new File(trimmed).getName();
     }
 
     /**
-     * This method sets the path and filename of the case being considered using
-     * the one specified as an argument.
+     * Sets the full file path for persistence.
      *
-     * @param pathAndFileName the path and filename of the case being
-     * considered.
+     * <p>
+     * The provided string is trimmed before storing. Empty or blank values are
+     * rejected.</p>
+     *
+     * @param pathAndFileName path (must not be {@code null} or empty)
+     * @throws IllegalArgumentException if {@code pathAndFileName} is
+     * {@code null} or empty
      */
-    public void setPathAndFileName(String pathAndFileName) {
-        this.pathAndFileName = pathAndFileName;
+    public void setPathAndFileName(final String pathAndFileName) {
+        if (pathAndFileName == null || pathAndFileName.trim().isEmpty()) {
+            LOGGER.error("setPathAndFileName: Path and file name cannot be null or empty");
+            throw new IllegalArgumentException("Path and file name cannot be null or empty");
+        }
+        this.pathAndFileName = pathAndFileName.trim();
     }
 
     /**
-     * This method returns whether the case being considered has been
-     * initialized or not.
+     * Convenience overload to set the path from a {@link File} instance.
      *
-     * @return TRUE, if the case has been initialized. Otherwise, FALSE.
+     * @param file file instance (must not be {@code null})
+     * @throws IllegalArgumentException if {@code file} is {@code null}
+     */
+    public void setPathAndFileName(final File file) {
+        if (file == null) {
+            LOGGER.error("setPathAndFileName(File): file cannot be null");
+            throw new IllegalArgumentException("file cannot be null");
+        }
+        setPathAndFileName(file.getPath());
+    }
+
+    /**
+     * Returns whether the case has been initialized.
+     *
+     * @return {@code true} if initialized, otherwise {@code false}
      */
     public boolean isInitialized() {
         return initialized;
     }
 
     /**
-     * This method sets whether the case being considered has been initialized
-     * or not, depending on the value of the parameter.
+     * Sets the initialization state.
      *
-     * @param initialized whether the case being considered has been initialized
-     * or not.
+     * @param initialized initialization flag
      */
-    public void setInitialized(boolean initialized) {
+    public void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
     /**
-     * This method returns whether the case being considered has been already
-     * saved or not.
+     * Returns whether the case has already been saved.
      *
-     * @return TRUE if the case has been already saved. Otherwise, FALSE.
+     * @return {@code true} if saved, otherwise {@code false}
      */
     public boolean isAlreadySaved() {
         return alreadySaved;
     }
 
     /**
-     * This method sets whether the case being considered has already been saved
-     * or not, depending on the value of the parameter.
+     * Sets the saved state.
      *
-     * @param alreadySaved whether the case being considered has already been
-     * saved or not.
+     * @param alreadySaved saved flag
      */
-    public void setAlreadySaved(boolean alreadySaved) {
+    public void setAlreadySaved(final boolean alreadySaved) {
         this.alreadySaved = alreadySaved;
     }
 
     /**
-     * This method returns whether the case being considered has been modified
-     * after saved or not.
+     * Returns whether the case has been modified.
      *
-     * @return TRUE, if the case has been modified after saved. Otherwise,
-     * FALSE.
+     * @return {@code true} if modified, otherwise {@code false}
      */
     public boolean isModified() {
         return modified;
     }
 
     /**
-     * This method sets whether the case being considered has been modified
-     * after saved or not, depending on the value of the parameter.
+     * Sets the modified state.
      *
-     * @param modified whether the case being considered has been modified after
-     * saved or not.
+     * @param modified modified flag
      */
-    public void setModified(boolean modified) {
+    public void setModified(final boolean modified) {
         this.modified = modified;
     }
 
     /**
-     * This method gets the implementation group of the case being considered.
+     * Returns the current implementation group.
      *
-     * @return the implementation group of the case being considered.
+     * @return implementation group or {@code null} if not set
      */
     public ImplementationGroups getCurrentIG() {
         return currentIG;
     }
 
     /**
-     * This method sets the implementation group of the case being considered
-     * using the one specified as an argument.
+     * Sets the implementation group.
      *
-     * @param currentIG the implementation group of the case being considered.
+     * @param currentIG implementation group (must not be {@code null})
+     * @throws IllegalArgumentException if {@code currentIG} is {@code null}
      */
-    public void setCurrentIG(ImplementationGroups currentIG) {
+    public void setCurrentIG(final ImplementationGroups currentIG) {
+        if (currentIG == null) {
+            LOGGER.error("setCurrentIG: Implementation group cannot be null");
+            throw new IllegalArgumentException("Implementation group cannot be null");
+        }
         this.currentIG = currentIG;
     }
-
 }

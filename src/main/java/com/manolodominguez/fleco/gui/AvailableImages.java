@@ -110,7 +110,11 @@ public enum AvailableImages {
     /**
      * Close window/action icon.
      */
-    CLOSE("close.png");
+    CLOSE("close.png"),
+    /**
+     * Icon used for main window.
+     */
+    WINDOW_ICON("window_icon.png");
 
     /**
      * Base path for all image resources inside the classpath.

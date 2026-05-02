@@ -44,65 +44,127 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is an enum implementation to identify all available images that can be
- * used in FLECO Studio.
+ * Enum that defines all available image resources used in FLECO Studio.
  *
- * @author Manuel Domínguez-Dorado
+ * <p>
+ * Each constant represents an image file name that can be resolved into a
+ * classpath resource path for different icon resolutions (16x16 and 32x32).
+ * </p>
+ *
+ * <p>
+ * This enum centralizes image resource management to avoid scattered string
+ * literals across the UI layer and improve maintainability.
+ * </p>
  */
 public enum AvailableImages {
+
+    /**
+     * Image used when a resource is not found.
+     */
     NOT_FOUND("notfound.png"),
+    /**
+     * About dialog icon.
+     */
     ABOUT("about.png"),
+    /**
+     * Exit application icon.
+     */
     EXIT("exit.png"),
+    /**
+     * Genes-related icon.
+     */
     GENES("genes.png"),
+    /**
+     * License information icon.
+     */
     LICENSE("license.png"),
+    /**
+     * Load action icon.
+     */
     LOAD("load.png"),
+    /**
+     * New item/action icon.
+     */
     NEW("new.png"),
+    /**
+     * Random generation icon.
+     */
     RANDOM("random.png"),
+    /**
+     * Rules/help icon.
+     */
     RULES("rules.png"),
+    /**
+     * Run/execute action icon.
+     */
     RUN("run.png"),
+    /**
+     * Save action icon.
+     */
     SAVE("save.png"),
+    /**
+     * Question/help icon.
+     */
     QUESTION("question.png"),
+    /**
+     * Save-as action icon.
+     */
     SAVE_AS("saveas.png"),
+    /**
+     * Close window/action icon.
+     */
     CLOSE("close.png");
 
+    /**
+     * Base path for all image resources inside the classpath.
+     */
+    private static final String IMAGES_PATH = "/com/manolodominguez/fleco/gui/";
+
+    /**
+     * Subdirectory for 16x16 icons.
+     */
+    private static final String ICON_16 = "16x16/";
+
+    /**
+     * Subdirectory for 32x32 icons.
+     */
+    private static final String ICON_32 = "32x32/";
+
+    /**
+     * File name associated with the enum constant.
+     */
     private final String imageFileName;
 
-    private final Logger logger = LoggerFactory.getLogger(AvailableImages.class);
-    
     /**
-     * This is the constructor of the enum. It creates a new enum item and
-     * associates a filename to it.
+     * Creates a new enum constant bound to a specific image file name.
      *
-     * @param imageFilename the filename that corresponds to the new available
-     * image created.
+     * @param imageFileName the image file name associated with this enum
+     * constant. Must not be {@code null} or empty.
+     * @throws IllegalArgumentException if {@code imageFileName} is null or
+     * empty
      */
-    private AvailableImages(String imageFileName) {
+    AvailableImages(final String imageFileName) {
+        if (imageFileName == null || imageFileName.trim().isEmpty()) {
+            throw new IllegalArgumentException("imageFileName cannot be null or empty");
+        }
         this.imageFileName = imageFileName;
     }
 
     /**
-     * This methods gets the complete file path to the image associated to the
-     * enum item in a 16x16 pixel format.
+     * Returns the classpath resource path for the 16x16 version of this image.
      *
-     * @return the complete file path to the image associated to the enum item
-     * in a 16x16 pixel format.
+     * @return the full resource path for the 16x16 icon
      */
     public String getPath16x16() {
-        return AvailableImages.IMAGES_PATH + ICON_16 + imageFileName;
+        return IMAGES_PATH + ICON_16 + imageFileName;
     }
 
     /**
-     * This methods gets the complete file path to the image associated to the
-     * enum item in a 32x32 pixel format.
+     * Returns the classpath resource path for the 32x32 version of this image.
      *
-     * @return the complete file path to the image associated to the enum item
-     * in a 32x32 pixel format.
+     * @return the full resource path for the 32x32 icon
      */
     public String getPath32x32() {
-        return AvailableImages.IMAGES_PATH + ICON_32 + imageFileName;
+        return IMAGES_PATH + ICON_32 + imageFileName;
     }
-
-    private static final String IMAGES_PATH = "/com/manolodominguez/fleco/gui/";
-    private static final String ICON_16 = "16x16/";
-    private static final String ICON_32 = "32x32/";
 }

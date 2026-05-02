@@ -61,7 +61,9 @@ import org.slf4j.LoggerFactory;
 public final class FLECOStudio {
 
     /**
-     * Private constructor to prevent instantiation of this utility class.
+     * Default constructor required for Javadoc compliance. This class is not
+     * intended to be instantiated, but the constructor is kept for backward
+     * compatibility.
      */
     private FLECOStudio() {
         // Prevent instantiation

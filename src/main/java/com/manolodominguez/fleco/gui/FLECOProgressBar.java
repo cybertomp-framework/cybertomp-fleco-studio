@@ -103,15 +103,16 @@ public class FLECOProgressBar extends JProgressBar implements IFLECOProgressEven
      * to the [0.0, 1.0] range, converts it to an integer percentage (0-100) and
      * updates the progress bar value on the Swing Event Dispatch Thread.</p>
      *
+     *
      * <p>
-     * Validation policy:
+     * Validation policy:</p>
      * <ul>
      * <li>If {@code progressEvent} is {@code null} a
      * {@link NullPointerException} is thrown.</li>
      * <li>If the reported percentage is {@code NaN} or infinite it is treated
      * as 0.0 and a warning is logged.</li>
      * </ul>
-     * </p>
+     *
      *
      * @param progressEvent the progress event sent by an instance of FLECO
      * algorithm

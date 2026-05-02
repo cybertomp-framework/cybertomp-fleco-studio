@@ -45,6 +45,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -57,131 +58,200 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a way to manage the widths of colunmns in a JTable.
- * Various properties control how the width of the column is calculated. Another
- * property controls whether column width calculation should be dynamic.
- * Finally, various Actions will be added to the table to allow the user to
- * customize the functionality.
+ * Utility that adjusts {@link JTable} column widths based on header and cell
+ * content. Designed to be used with tables configured with
+ * {@code AUTO_RESIZE_OFF}, although it will operate with other modes as well.
  *
- * This class is designed to be used with JTables that use an auto resize mode
- * of AUTO_RESIZE_OFF. With all other modes you are constrained as the width of
- * the columns must fit inside the table. So if you increase one column, one or
- * more of the other columns must decrease. Because of this the resize mode of
- * RESIZE_ALL_COLUMNS will work the best.
+ * <p>
+ * The adjuster can include/exclude header and/or data when computing widths,
+ * optionally only enlarge columns (never shrink), and optionally react to model
+ * changes dynamically.
+ * </p>
+ *
+ * <p>
+ * This implementation is conservative: it preserves the original public API and
+ * behavior while adding defensive checks, compact logging and small readability
+ * improvements.
+ * </p>
+ *
+ * <p>
+ * Compatibility: Java 11, no additional dependencies.</p>
  *
  * @author Rob Camick
  * @author Manuel Domínguez-Dorado
  */
 public class TableColumnAdjuster implements PropertyChangeListener, TableModelListener {
 
-    private static final int DEFAULT_SPACING = 6;
-    private static final boolean DEFAULT_COLUMN_HEADER_INCLUDED = true;
-    private static final boolean DEFAULT_COLUMN_DATA_INCLUDED = true;
-    private static final boolean DEFAULT_IS_ONLY_ENLARGE_COLUMN = false;
-    private static final boolean DEFAULT_DINAMIC_ADJUSTMENT = true;
-
-    private JTable table;
-    private int spacing;
-    private boolean isColumnHeaderIncluded;
-    private boolean isColumnDataIncluded;
-    private boolean isOnlyEnlargeColumn;
-    private boolean isDynamicAdjustment;
-    private Map<TableColumn, Integer> columnSizes = new HashMap<>();
-
-    private final Logger logger = LoggerFactory.getLogger(TableColumnAdjuster.class);
-    
     /**
-     * This is the constructor of the class. It creates a new instance and
-     * initialize its attributes with their default values.
-     *
-     * @param table the table whose columns width are going to be managed.
+     * Default extra spacing added to computed widths (pixels).
      */
-    public TableColumnAdjuster(JTable table) {
+    private static final int DEFAULT_SPACING = 6;
+
+    /**
+     * Default: include column header when computing width.
+     */
+    private static final boolean DEFAULT_COLUMN_HEADER_INCLUDED = true;
+
+    /**
+     * Default: include column data when computing width.
+     */
+    private static final boolean DEFAULT_COLUMN_DATA_INCLUDED = true;
+
+    /**
+     * Default: allow shrinking columns (false means allow shrink).
+     */
+    private static final boolean DEFAULT_IS_ONLY_ENLARGE_COLUMN = false;
+
+    /**
+     * Default: enable dynamic adjustment on model changes.
+     */
+    private static final boolean DEFAULT_DYNAMIC_ADJUSTMENT = true;
+
+    /**
+     * Backing table whose columns are managed. Never null.
+     */
+    private final JTable table;
+
+    /**
+     * Extra spacing added to computed widths.
+     */
+    private int spacing;
+
+    /**
+     * Whether header is included in width computation.
+     */
+    private boolean isColumnHeaderIncluded;
+
+    /**
+     * Whether data is included in width computation.
+     */
+    private boolean isColumnDataIncluded;
+
+    /**
+     * Whether columns should only be enlarged (never shrunk).
+     */
+    private boolean isOnlyEnlargeColumn;
+
+    /**
+     * Whether dynamic adjustment is enabled.
+     */
+    private boolean isDynamicAdjustment;
+
+    /**
+     * Stores previous widths for restore operations.
+     */
+    private final Map<TableColumn, Integer> columnSizes = new HashMap<>();
+
+    /**
+     * Logger for diagnostic messages.
+     */
+    private final Logger logger = LoggerFactory.getLogger(TableColumnAdjuster.class);
+
+    /**
+     * Constructs a TableColumnAdjuster for the provided table using the default
+     * spacing.
+     *
+     * @param table the table whose columns will be managed; must not be null
+     * @throws NullPointerException if {@code table} is null
+     */
+    public TableColumnAdjuster(final JTable table) {
         this(table, DEFAULT_SPACING);
     }
 
     /**
-     * This is the constructor of the class. It creates a new instance and
-     * initialize its attributes with the values specified as parameters.
+     * Constructs a TableColumnAdjuster for the provided table using the
+     * specified spacing.
      *
-     * @param table teh table whose columns width are going to be managed.
-     * @param spacing the table's default spacing between columns.
+     * @param table the table whose columns will be managed; must not be null
+     * @param spacing extra spacing (pixels) to add to computed widths
+     * @throws NullPointerException if {@code table} is null
      */
-    public TableColumnAdjuster(JTable table, int spacing) {
-        this.table = table;
+    public TableColumnAdjuster(final JTable table, final int spacing) {
+        this.table = Objects.requireNonNull(table, "table must not be null");
         this.spacing = spacing;
-        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(0);
+        // Initialize preferred widths defensively: if column model is available set to current width
+        final TableColumnModel columnModel = this.table.getColumnModel();
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            try {
+                columnModel.getColumn(i).setPreferredWidth(0);
+            } catch (Exception ex) {
+                logger.debug("Failed to set preferred width for column {}: {}", i, ex.getMessage());
+            }
         }
         setColumnHeaderIncluded(DEFAULT_COLUMN_HEADER_INCLUDED);
         setColumnDataIncluded(DEFAULT_COLUMN_DATA_INCLUDED);
         setOnlyEnlargeColumn(DEFAULT_IS_ONLY_ENLARGE_COLUMN);
-        setDynamicAdjustment(DEFAULT_DINAMIC_ADJUSTMENT);
+        setDynamicAdjustment(DEFAULT_DYNAMIC_ADJUSTMENT);
     }
 
     /**
-     * This methods adjust the width of every column in the table.
-     *
+     * Adjusts every column in the table by computing an appropriate width and
+     * applying it.
      */
-    public void adjustColumns() {
-        TableColumnModel tableColumnModel = table.getColumnModel();
+    public final void adjustColumns() {
+        final TableColumnModel tableColumnModel = table.getColumnModel();
         for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
             adjustColumn(i);
         }
     }
 
     /**
-     * This methods adjust the width of the column specified as an argument.
+     * Adjusts the width of the column at the given view index.
      *
-     * @param column the index of the column to adjust.
+     * @param column the view index of the column to adjust
      */
-    public void adjustColumn(int column) {
-        TableColumn tableColumn = table.getColumnModel().getColumn(column);
+    public final void adjustColumn(final int column) {
+        final TableColumn tableColumn = table.getColumnModel().getColumn(column);
         if (!tableColumn.getResizable()) {
             return;
         }
-        int columnHeaderWidth = getColumnHeaderWidth(column);
-        int columnDataWidth = getColumnDataWidth(column);
-        int preferredWidth = Math.max(columnHeaderWidth, columnDataWidth);
+        final int columnHeaderWidth = getColumnHeaderWidth(column);
+        final int columnDataWidth = getColumnDataWidth(column);
+        final int preferredWidth = Math.max(columnHeaderWidth, columnDataWidth);
         updateTableColumn(column, preferredWidth);
     }
 
     /**
-     * This methods computes the required width of the column header specified
-     * as an argument.
+     * Computes the width required to render the column header at the given view
+     * index.
      *
-     * @param column the index of the column header whose width is being
-     * computed.
+     * @param column the view index of the column header
+     * @return the preferred width in pixels (0 if header excluded)
      */
-    private int getColumnHeaderWidth(int column) {
+    private int getColumnHeaderWidth(final int column) {
         if (!isColumnHeaderIncluded) {
             return 0;
         }
-        TableColumn tableColumn = table.getColumnModel().getColumn(column);
-        Object value = tableColumn.getHeaderValue();
+        final TableColumn tableColumn = table.getColumnModel().getColumn(column);
+        final Object value = tableColumn.getHeaderValue();
         TableCellRenderer renderer = tableColumn.getHeaderRenderer();
-        if (renderer == null) {
+        if (renderer == null && table.getTableHeader() != null) {
             renderer = table.getTableHeader().getDefaultRenderer();
         }
-        Component component = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
-        return component.getPreferredSize().width;
+        if (renderer == null) {
+            return 0;
+        }
+        final Component component = renderer.getTableCellRendererComponent(table, value, false, false, -1, column);
+        return component == null ? 0 : component.getPreferredSize().width;
     }
 
     /**
-     * This methods computes the required width of the column specified as an
-     * argument.
+     * Computes the width required to render the data cells of the column at the
+     * given view index.
      *
-     * @param column the index of the column whose width is being computed.
+     * @param column the view index of the column
+     * @return the preferred width in pixels (0 if data excluded)
      */
-    private int getColumnDataWidth(int column) {
+    private int getColumnDataWidth(final int column) {
         if (!isColumnDataIncluded) {
             return 0;
         }
         int preferredWidth = 0;
-        int maxWidth = table.getColumnModel().getColumn(column).getMaxWidth();
-        for (int row = 0; row < table.getRowCount(); row++) {
+        final TableColumn columnObj = table.getColumnModel().getColumn(column);
+        final int maxWidth = columnObj.getMaxWidth();
+        final int rowCount = table.getRowCount();
+        for (int row = 0; row < rowCount; row++) {
             preferredWidth = Math.max(preferredWidth, getCellDataWidth(row, column));
-            //  We've exceeded the maximum width, no need to check other rows
             if (preferredWidth >= maxWidth) {
                 break;
             }
@@ -190,168 +260,223 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     }
 
     /**
-     * This methods computes the required width for a specific cell determined
-     * by a the row and the column soecified as an argument.
+     * Computes the width required to render a specific cell.
      *
-     * @param row The row that determines the cell.
-     * @param column The column that determines the cell.
+     * @param row the row index
+     * @param column the view column index
+     * @return the preferred width in pixels for the cell (including intercell
+     * spacing)
      */
-    private int getCellDataWidth(int row, int column) {
-        TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
-        Component component = table.prepareRenderer(cellRenderer, row, column);
-        int width = component.getPreferredSize().width + table.getIntercellSpacing().width;
-        return width;
+    private int getCellDataWidth(final int row, final int column) {
+        try {
+            final TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+            final Component component = table.prepareRenderer(cellRenderer, row, column);
+            final int width = component.getPreferredSize().width + table.getIntercellSpacing().width;
+            return width;
+        } catch (Exception ex) {
+            // Defensive: if a renderer misbehaves, log and return a conservative width
+            logger.debug("Error computing cell width at row {}, col {}: {}", row, column, ex.getMessage());
+            return 0;
+        }
     }
 
     /**
-     * This method updates the specified column's width with the value specified
-     * as an argument.
+     * Updates the width of the column at the given view index applying spacing
+     * and respecting the {@code isOnlyEnlargeColumn} policy.
      *
-     * @param width The new width value for the column.
-     * @param column The column to be adjusted.
+     * @param column the view index of the column to update
+     * @param width the computed width (without spacing)
      */
-    private void updateTableColumn(int column, int width) {
+    private void updateTableColumn(final int column, int width) {
         final TableColumn tableColumn = table.getColumnModel().getColumn(column);
         if (!tableColumn.getResizable()) {
             return;
         }
         width += spacing;
-        //  Shrink the column width
         if (isOnlyEnlargeColumn) {
             width = Math.max(width, tableColumn.getPreferredWidth());
         }
         columnSizes.put(tableColumn, tableColumn.getWidth());
-        table.getTableHeader().setResizingColumn(tableColumn);
+        try {
+            table.getTableHeader().setResizingColumn(tableColumn);
+        } catch (Exception ex) {
+            // Some LAFs or states may not have a table header; ignore safely
+            logger.debug("Unable to set resizing column: {}", ex.getMessage());
+        }
         tableColumn.setWidth(width);
     }
 
     /**
-     * This method restores every column in the table to its previous width.
+     * Restores every column to the previously stored width (if available).
      */
-    public void restoreColumns() {
-        TableColumnModel tableColumnModel = table.getColumnModel();
+    public final void restoreColumns() {
+        final TableColumnModel tableColumnModel = table.getColumnModel();
         for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
             restoreColumn(i);
         }
     }
 
     /**
-     * This methods restores the width of the column specified as an argument to
-     * its previous width.
+     * Restores the width of the column at the given view index to its previous
+     * value if it was recorded.
      *
-     * @param column the index of the column to adjust.
+     * @param column the view index of the column to restore
      */
-    private void restoreColumn(int column) {
-        TableColumn tableColumn = table.getColumnModel().getColumn(column);
-        Integer width = columnSizes.get(tableColumn);
+    private void restoreColumn(final int column) {
+        final TableColumn tableColumn = table.getColumnModel().getColumn(column);
+        final Integer width = columnSizes.get(tableColumn);
         if (width != null) {
-            table.getTableHeader().setResizingColumn(tableColumn);
+            try {
+                table.getTableHeader().setResizingColumn(tableColumn);
+            } catch (Exception ex) {
+                logger.debug("Unable to set resizing column for restore: {}", ex.getMessage());
+            }
             tableColumn.setWidth(width);
         }
     }
 
     /**
-     * This methods sets whether the column header is counted on the computation
-     * of the column width or not.
+     * Sets whether the column header is included when computing widths.
      *
-     * @param isColumnHeaderIncluded whether the column header is counted on the
-     * computation of the column width or not.
+     * @param isColumnHeaderIncluded true to include header width, false
+     * otherwise
      */
-    public final void setColumnHeaderIncluded(boolean isColumnHeaderIncluded) {
+    public final void setColumnHeaderIncluded(final boolean isColumnHeaderIncluded) {
         this.isColumnHeaderIncluded = isColumnHeaderIncluded;
     }
 
     /**
-     * This methods sets whether the column data is counted on the computation
-     * of the column width or not.
+     * Sets whether column data is included when computing widths.
      *
-     * @param isColumnDataIncluded whether the column data is counted on the
-     * computation of the column width or not.
+     * @param isColumnDataIncluded true to include data width, false otherwise
      */
-    public final void setColumnDataIncluded(boolean isColumnDataIncluded) {
+    public final void setColumnDataIncluded(final boolean isColumnDataIncluded) {
         this.isColumnDataIncluded = isColumnDataIncluded;
     }
 
     /**
-     * This methods sets whether the column mus be shrinked apart from enlarged,
-     * if needed.
+     * Sets whether columns should only be enlarged (never shrunk).
      *
-     * @param isOnlyEnlargeColumn whether the column mus be shrinked apart from
-     * enlarged, if needed.
+     * @param isOnlyEnlargeColumn true to only enlarge columns, false to allow
+     * shrink
      */
-    public final void setOnlyEnlargeColumn(boolean isOnlyEnlargeColumn) {
+    public final void setOnlyEnlargeColumn(final boolean isOnlyEnlargeColumn) {
         this.isOnlyEnlargeColumn = isOnlyEnlargeColumn;
     }
 
     /**
-     * This methods sets whether changes to the model should cause the width to
-     * be dynamically recalculated.
+     * Enables or disables dynamic adjustment. When enabled, the adjuster will
+     * listen to table property changes and model events to recalculate widths.
      *
-     * @param isDynamicAdjustment whether changes to the model should cause the
-     * width to be dynamically recalculated.
+     * @param isDynamicAdjustment true to enable dynamic adjustment, false to
+     * disable
      */
-    public final void setDynamicAdjustment(boolean isDynamicAdjustment) {
-        if (this.isDynamicAdjustment != isDynamicAdjustment) {
-            if (isDynamicAdjustment) {
-                table.addPropertyChangeListener(this);
-                table.getModel().addTableModelListener(this);
+    public final void setDynamicAdjustment(final boolean isDynamicAdjustment) {
+        if (this.isDynamicAdjustment == isDynamicAdjustment) {
+            return;
+        }
+        // Toggle listeners safely, guarding against null model
+        if (isDynamicAdjustment) {
+            table.addPropertyChangeListener(this);
+            final TableModel model = table.getModel();
+            if (model != null) {
+                model.addTableModelListener(this);
             } else {
+                logger.debug("setDynamicAdjustment: table model is null when enabling dynamic adjustment");
+            }
+        } else {
+            try {
                 table.removePropertyChangeListener(this);
-                table.getModel().removeTableModelListener(this);
+            } catch (Exception ex) {
+                logger.debug("Error removing property change listener: {}", ex.getMessage());
+            }
+            final TableModel model = table.getModel();
+            if (model != null) {
+                model.removeTableModelListener(this);
             }
         }
         this.isDynamicAdjustment = isDynamicAdjustment;
     }
 
     /**
-     * This methods is called when there is a change in a table property. It is
-     * used to adjusting all columns when the table model change.
+     * Called when a bound property changes on the table. Specifically reacts to
+     * changes of the "model" property to update listeners and recalculate
+     * column widths.
      *
-     * @param e The property change event that informs of the change in a table
-     * property.
+     * @param e the property change event
      */
     @Override
-    public void propertyChange(PropertyChangeEvent e) {
-        //  When the TableModel changes we need to update the listeners
-        //  and column widths
-        if ("model".equals(e.getPropertyName())) {
-            TableModel model = (TableModel) e.getOldValue();
-            model.removeTableModelListener(this);
-            model = (TableModel) e.getNewValue();
-            model.addTableModelListener(this);
-            adjustColumns();
+    public final void propertyChange(final PropertyChangeEvent e) {
+        if (!"model".equals(e.getPropertyName())) {
+            return;
         }
+        final Object oldVal = e.getOldValue();
+        final Object newVal = e.getNewValue();
+        if (oldVal instanceof TableModel) {
+            try {
+                ((TableModel) oldVal).removeTableModelListener(this);
+            } catch (Exception ex) {
+                logger.debug("Error removing old table model listener: {}", ex.getMessage());
+            }
+        }
+        if (newVal instanceof TableModel) {
+            try {
+                ((TableModel) newVal).addTableModelListener(this);
+            } catch (Exception ex) {
+                logger.debug("Error adding new table model listener: {}", ex.getMessage());
+            }
+        }
+        adjustColumns();
     }
 
     /**
-     * This methods is called when there is a change in a table model. It is
-     * used to adjusting all columns when the content of a cell varies.
+     * Called when the table model changes. If data inclusion is disabled this
+     * method returns immediately. Otherwise it schedules a column adjustment on
+     * the EDT.
      *
-     * @param e The table model event that informs of the change within a table.
+     * <p>
+     * Behavior mirrors the original implementation: when a single column is
+     * updated it adjusts that column (or only the changed row if
+     * {@code isOnlyEnlargeColumn} is set), otherwise it adjusts all
+     * columns.</p>
+     *
+     * @param e the table model event describing the change
      */
     @Override
-    public void tableChanged(TableModelEvent e) {
+    public final void tableChanged(final TableModelEvent e) {
         if (!isColumnDataIncluded) {
             return;
         }
+        // Schedule on EDT to avoid concurrency issues with Swing components
         SwingUtilities.invokeLater(() -> {
-            int column = table.convertColumnIndexToView(e.getColumn());
-            if (e.getType() == TableModelEvent.UPDATE && column != -1) {
-                if (isOnlyEnlargeColumn) {
-                    int row = e.getFirstRow();
-                    TableColumn tableColumn = table.getColumnModel().getColumn(column);
+            if (e == null) {
+                adjustColumns();
+                return;
+            }
+            final int eventType = e.getType();
+            final int modelColumn = e.getColumn();
+            final int viewColumn = (modelColumn == TableModelEvent.ALL_COLUMNS) ? -1 : table.convertColumnIndexToView(modelColumn);
 
-                    if (tableColumn.getResizable()) {
-                        int width = getCellDataWidth(row, column);
-                        updateTableColumn(column, width);
+            if (eventType == TableModelEvent.UPDATE && viewColumn != -1) {
+                if (isOnlyEnlargeColumn) {
+                    final int row = e.getFirstRow();
+                    if (row >= 0 && row < table.getRowCount()) {
+                        final TableColumn tableColumn = table.getColumnModel().getColumn(viewColumn);
+                        if (tableColumn.getResizable()) {
+                            final int width = getCellDataWidth(row, viewColumn);
+                            updateTableColumn(viewColumn, width);
+                        }
+                    } else {
+                        // If row is invalid, fallback to adjusting the whole column
+                        adjustColumn(viewColumn);
                     }
                 } else {
-                    adjustColumn(column);
+                    adjustColumn(viewColumn);
                 }
             } else {
+                // For inserts, deletes or structural changes, adjust all columns
                 adjustColumns();
             }
         });
     }
-
 }

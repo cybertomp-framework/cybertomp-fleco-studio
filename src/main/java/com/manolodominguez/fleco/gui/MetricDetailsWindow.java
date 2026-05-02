@@ -45,159 +45,304 @@ import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a graphic window to show additional information
- * regarding a given CyberTOMP metric. This is useful not only to design good
- * cybersecurity actions but also to make the cyebrsecurity workforce learn and
- * improve.
+ * MetricDetailsWindow displays contextual information for a CyberTOMP metric.
+ * <p>
+ * The window can be constructed for a {@link Genes} metric, a
+ * {@link Categories} metric, a {@link Functions} metric, or a generic business
+ * asset view.
+ * </p>
+ *
+ * <p>
+ * This class is conservative in behavior: it preserves the original layout and
+ * content while improving defensive checks, reducing duplication and adding
+ * compact logging for invalid usage.
+ * </p>
+ *
+ * <p>
+ * Compatibility: Java 11, no additional dependencies.</p>
  *
  * @author Manuel Domínguez-Dorado
  */
 @SuppressWarnings("serial")
 public class MetricDetailsWindow extends JFrame {
 
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Default width of the window in pixels.
+     */
     private static final int DEFAULT_WIDTH = 1000;
+
+    /**
+     * Default height of the window in pixels.
+     */
     private static final int DEFAULT_HEIGHT = 600;
 
-    private Frame parent;
+    /**
+     * Logger for diagnostic messages.
+     */
+    private final Logger logger = LoggerFactory.getLogger(MetricDetailsWindow.class);
+
+    /**
+     * Parent frame used to compute initial position; must not be null.
+     */
+    private final Frame parent;
+
+    /**
+     * Image provider for icons.
+     */
     private ImageBroker imageBroker;
 
-    private JScrollPane informationPanelScroll;
-    private JPanel informationPanel;
+    /**
+     * Panel that holds action buttons.
+     */
     private JPanel buttonsPanel;
 
+    /**
+     * Label for the metric acronym.
+     */
     private JLabel labelAcronym;
+
+    /**
+     * Label that shows the acronym text.
+     */
     private JLabel labelAcronymTxt;
+
+    /**
+     * Label for purpose section.
+     */
     private JLabel labelPurpose;
+
+    /**
+     * Text area that shows the purpose.
+     */
     private JTextArea textAreaPurpose;
+
+    /**
+     * Label for implementation tips section.
+     */
     private JLabel labelImplementationTips;
+
+    /**
+     * Text area that shows implementation tips.
+     */
     private JTextArea textAreaImplementationTips;
+
+    /**
+     * Label for references section.
+     */
     private JLabel labelReferences;
+
+    /**
+     * Text area that shows references.
+     */
     private JTextArea textAreaReferences;
+
+    /**
+     * Label for leading functional area section.
+     */
     private JLabel labelLeadingArea;
+
+    /**
+     * Text area that shows the leading functional area.
+     */
     private JTextArea textAreaLeadingArea;
+
+    /**
+     * Label for leading area responsibilities section.
+     */
     private JLabel labelLeadingAreaResponsibilities;
+
+    /**
+     * Text area that shows the leading area responsibilities.
+     */
     private JTextArea textAreaLeadingAreaResponsibilities;
+
+    /**
+     * Label for an additional tip section.
+     */
     private JLabel labelAdditionalTip;
+
+    /**
+     * Text area that shows an additional tip.
+     */
     private JTextArea textArealabelAdditionalTip;
+
+    /**
+     * Close button for the window.
+     */
     private JButton closeButton;
 
     /**
-     * This is the constructor of the class.It creates a new instance and fills
-     * it with information related to the gene (expected aoutcome) specified as
-     * an argument.
+     * Constructs a MetricDetailsWindow for a specific Genes metric.
      *
-     * @param parent The windows this class is instantiated from. Used to
-     * compute the screen position of this window.
-     * @param gene The gene (expected outcome) whose information is being
-     * presented in this window.
+     * @param parent the parent frame used to compute the window position; must
+     * not be null
+     * @param gene the gene whose information will be displayed; must not be
+     * null
+     * @throws NullPointerException if parent or gene is null
      */
-    public MetricDetailsWindow(Frame parent, Genes gene) {
+    public MetricDetailsWindow(final Frame parent, final Genes gene) {
         super();
+        if (parent == null) {
+            logger.error("MetricDetailsWindow constructor called with null parent (Genes)");
+            throw new NullPointerException("parent must not be null");
+        }
+        if (gene == null) {
+            logger.error("MetricDetailsWindow constructor called with null gene");
+            throw new NullPointerException("gene must not be null");
+        }
         this.parent = parent;
         setTitle(gene.getAcronym());
+
         labelAcronymTxt = new JLabel(gene.getAcronym());
         textAreaPurpose = new JTextArea(gene.getPurpose());
         textAreaImplementationTips = new JTextArea(gene.getImplementationTips());
         textAreaReferences = new JTextArea(gene.getReferences());
         textAreaLeadingArea = new JTextArea(gene.getLeadingFunctionalArea().getAreaName());
         textAreaLeadingAreaResponsibilities = new JTextArea(gene.getLeadingFunctionalArea().getMainResponsibilities());
+
         initCommonComponents();
     }
 
     /**
-     * This is the constructor of the class.It creates a new instance and fills
-     * it with information related to the category specified as an argument.
+     * Constructs a MetricDetailsWindow for a Categories metric.
      *
-     * @param parent The windows this class is instantiated from. Used to
-     * compute the screen position of this window.
-     * @param category The category whose information is being presented in this
-     * window.
+     * @param parent the parent frame used to compute the window position; must
+     * not be null
+     * @param category the category whose information will be displayed; must
+     * not be null
+     * @throws NullPointerException if parent or category is null
      */
-    public MetricDetailsWindow(Frame parent, Categories category) {
+    public MetricDetailsWindow(final Frame parent, final Categories category) {
         super();
+        if (parent == null) {
+            logger.error("MetricDetailsWindow constructor called with null parent (Categories)");
+            throw new NullPointerException("parent must not be null");
+        }
+        if (category == null) {
+            logger.error("MetricDetailsWindow constructor called with null category");
+            throw new NullPointerException("category must not be null");
+        }
         this.parent = parent;
         setTitle(category.getAcronym());
+
         labelAcronymTxt = new JLabel(category.getAcronym());
         textAreaPurpose = new JTextArea(category.getPurpose());
         textAreaImplementationTips = new JTextArea("Implementation tips are not provided at this level. Choose any nested, low-level metric to access to their corresponding implementation tips.");
         textAreaReferences = new JTextArea("References are not provided at this level. Choose any nested, low-level metric to access to their corresponding references.");
         textAreaLeadingArea = new JTextArea("Several functional areas are involved in leading this category's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area.");
         textAreaLeadingAreaResponsibilities = new JTextArea("Several functional areas are involved in leading this category's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area's responsibility.");
+
         initCommonComponents();
     }
 
     /**
-     * This is the constructor of the class.It creates a new instance and fills
-     * it with information related to the function specified as an argument.
+     * Constructs a MetricDetailsWindow for a Functions metric.
      *
-     * @param parent The windows this class is instantiated from. Used to
-     * compute the screen position of this window.
-     * @param function The function whose information is being presented in this
-     * window.
+     * @param parent the parent frame used to compute the window position; must
+     * not be null
+     * @param function the function whose information will be displayed; must
+     * not be null
+     * @throws NullPointerException if parent or function is null
      */
-    public MetricDetailsWindow(Frame parent, Functions function) {
+    public MetricDetailsWindow(final Frame parent, final Functions function) {
         super();
+        if (parent == null) {
+            logger.error("MetricDetailsWindow constructor called with null parent (Functions)");
+            throw new NullPointerException("parent must not be null");
+        }
+        if (function == null) {
+            logger.error("MetricDetailsWindow constructor called with null function");
+            throw new NullPointerException("function must not be null");
+        }
         this.parent = parent;
         setTitle(function.getAcronym());
+
         labelAcronymTxt = new JLabel(function.getAcronym());
         textAreaPurpose = new JTextArea(function.getPurpose());
         textAreaImplementationTips = new JTextArea("Implementation tips are not provided at this level. Choose any nested, low-level metric to access to their corresponding implementation tips.");
         textAreaReferences = new JTextArea("References are not provided at this level. Choose any nested, low-level metric to access to their corresponding references.");
         textAreaLeadingArea = new JTextArea("Several functional areas are involved in leading this function's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area.");
         textAreaLeadingAreaResponsibilities = new JTextArea("Several functional areas are involved in leading this function's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area's responsibility.");
+
         initCommonComponents();
     }
 
     /**
-     * This is the constructor of the class.It creates a new instance and fills
-     * it with information related to the business asset.
+     * Constructs a generic MetricDetailsWindow for a business (sub)asset.
      *
-     * @param parent The windows this class is instantiated from. Used to
-     * compute the screen position of this window.
+     * @param parent the parent frame used to compute the window position; must
+     * not be null
+     * @throws NullPointerException if parent is null
      */
-    public MetricDetailsWindow(Frame parent) {
+    public MetricDetailsWindow(final Frame parent) {
         super();
+        if (parent == null) {
+            logger.error("MetricDetailsWindow constructor called with null parent (generic)");
+            throw new NullPointerException("parent must not be null");
+        }
         this.parent = parent;
         setTitle("BUSINESS (SUB)ASSET");
+
         labelAcronymTxt = new JLabel("BUSINESS (SUB)ASSET");
         textAreaPurpose = new JTextArea("Achieve a good, holistic, cybersecurity status for the business (sub)asset");
         textAreaImplementationTips = new JTextArea("Implementation tips are not provided at this level. Choose any nested, low-level metric to access to their corresponding implementation tips.");
         textAreaReferences = new JTextArea("References are not provided at this level. Choose any nested, low-level metric to access to their corresponding references.");
         textAreaLeadingArea = new JTextArea("Several functional areas are involved in leading this asset's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area.");
         textAreaLeadingAreaResponsibilities = new JTextArea("Several functional areas are involved in leading this asset's cyberecurity actions. Choose any nested, low-level metric to access to their corresponding leading functional area's responsibility.");
+
         initCommonComponents();
     }
 
     /**
-     * This method creates all common graphical components of the window.
+     * Initializes common UI components, layout and behavior shared by all
+     * constructors.
+     *
+     * <p>
+     * This method centralizes component configuration to avoid duplication and
+     * to ensure consistent properties for all text areas and controls.</p>
      */
     private void initCommonComponents() {
         imageBroker = new ImageBroker();
-        addWindowStateListener((WindowEvent arg0) -> {
-            keep();
-        });
+
+        addWindowStateListener((WindowEvent arg0) -> keep());
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
-        //setResizable(false);
+
         buttonsPanel = new JPanel(new MigLayout("fillx, insets 20"));
-        //getContentPane().add(informationPanelScroll, "north, wmin 10, hmin 10, height 100%");
-        //getContentPane().setLayout(new MigLayout("fill, align left, wrap 2, debug, insets 10", "[left][left]", "[top][top]"));
-        getContentPane().setLayout(new MigLayout("wrap 2, fill, insets 20", "[align left, shrink][align left, shrink]", "[align top, shrink][align top, shrink][align top, shrink][align top, shrink][align top, shrink][align top, shrink][align top, shrink]"));
-        setBounds((parent.getWidth() - DEFAULT_WIDTH) / 2, (parent.getHeight() - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+        getContentPane().setLayout(new MigLayout("wrap 2, fill, insets 20",
+                "[align left, shrink][align left, shrink]",
+                "[align top, shrink][align top, shrink][align top, shrink][align top, shrink][align top, shrink][align top, shrink][align top, shrink]"));
+
+        // Position and sizing
+        try {
+            setBounds((parent.getWidth() - DEFAULT_WIDTH) / 2, (parent.getHeight() - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        } catch (Exception ex) {
+            // Defensive fallback: center on screen if parent dimensions are not available
+            logger.debug("Could not compute bounds from parent; centering on screen: {}", ex.getMessage());
+            final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+            setBounds((screen.width - DEFAULT_WIDTH) / 2, (screen.height - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        }
         setMaximumSize(new Dimension((int) (DEFAULT_WIDTH * 1.2f), (int) (DEFAULT_HEIGHT * 1.2f)));
         setMinimumSize(new Dimension((int) (DEFAULT_WIDTH * 0.8f), (int) (DEFAULT_HEIGHT * 0.8f)));
 
+        // Labels
         labelAcronym = new JLabel("Acronym: ");
         labelPurpose = new JLabel("Purpose: ");
         labelImplementationTips = new JLabel("Implementation tips: ");
@@ -205,65 +350,67 @@ public class MetricDetailsWindow extends JFrame {
         labelLeadingArea = new JLabel("Leading functional area: ");
         labelLeadingAreaResponsibilities = new JLabel("Area's responsibilities: ");
 
+        // Add acronym row
         getContentPane().add(labelAcronym, "growx, wmin 10");
         getContentPane().add(labelAcronymTxt, "growx, wmin 10");
 
-        textAreaPurpose.setEditable(false);
-        textAreaPurpose.setWrapStyleWord(true);
-        textAreaPurpose.setLineWrap(true);
-        textAreaPurpose.setAutoscrolls(true);
+        // Configure and add text areas
+        configureTextArea(textAreaPurpose);
         getContentPane().add(labelPurpose, "growx, wmin 10");
         getContentPane().add(textAreaPurpose, "growx, wmin 10");
 
-        textAreaImplementationTips.setEditable(false);
-        textAreaImplementationTips.setWrapStyleWord(true);
-        textAreaImplementationTips.setLineWrap(true);
-        textAreaImplementationTips.setAutoscrolls(true);
+        configureTextArea(textAreaImplementationTips);
         getContentPane().add(labelImplementationTips, "growx, wmin 10");
         getContentPane().add(textAreaImplementationTips, "growx, wmin 10");
 
-        textAreaReferences.setEditable(false);
-        textAreaReferences.setWrapStyleWord(true);
-        textAreaReferences.setLineWrap(true);
-        textAreaReferences.setAutoscrolls(true);
+        configureTextArea(textAreaReferences);
         getContentPane().add(labelReferences, "growx, wmin 10");
         getContentPane().add(textAreaReferences, "growx, wmin 10");
 
-        textAreaLeadingArea.setEditable(false);
-        textAreaLeadingArea.setWrapStyleWord(true);
-        textAreaLeadingArea.setLineWrap(true);
-        textAreaLeadingArea.setAutoscrolls(true);
+        configureTextArea(textAreaLeadingArea);
         getContentPane().add(labelLeadingArea, "growx, wmin 10");
         getContentPane().add(textAreaLeadingArea, "growx, wmin 10");
 
-        textAreaLeadingAreaResponsibilities.setEditable(false);
-        textAreaLeadingAreaResponsibilities.setWrapStyleWord(true);
-        textAreaLeadingAreaResponsibilities.setLineWrap(true);
-        textAreaLeadingAreaResponsibilities.setAutoscrolls(true);
+        configureTextArea(textAreaLeadingAreaResponsibilities);
         getContentPane().add(labelLeadingAreaResponsibilities, "growx, wmin 10");
         getContentPane().add(textAreaLeadingAreaResponsibilities, "growx, wmin 10");
 
         labelAdditionalTip = new JLabel("Additional tip:");
         textArealabelAdditionalTip = new JTextArea("The information in this window aims to serve as assistance in achieving the desired value for this metric. In any case, the cybersecurity team must convert all this information into specific tasks that will primarily depend on the nature of the asset in question. These tasks should be focused, considering the cybersecurity function and category that this metric contributes to, as well as the specialized field of the identified main functional area.");
-        textArealabelAdditionalTip.setEditable(false);
-        textArealabelAdditionalTip.setWrapStyleWord(true);
-        textArealabelAdditionalTip.setLineWrap(true);
-        textArealabelAdditionalTip.setAutoscrolls(true);
+        configureTextArea(textArealabelAdditionalTip);
         getContentPane().add(labelAdditionalTip, "growx, wmin 10");
         getContentPane().add(textArealabelAdditionalTip, "growx, wmin 10");
 
+        // Buttons panel and close button
         getContentPane().add(buttonsPanel, "span, south, width 100%, height 20, wrap, align right");
         closeButton = new JButton("Close");
         closeButton.setMnemonic('C');
         closeButton.setIcon(imageBroker.getImageIcon16x16(AvailableImages.CLOSE));
-        closeButton.addActionListener((ActionEvent e) -> {
-            dispose();
-        });
+        closeButton.addActionListener((ActionEvent e) -> dispose());
         buttonsPanel.add(closeButton, "align right");
     }
 
     /**
-     * This method prevent the window from being iconified or maximized.
+     * Configures a JTextArea with consistent properties used across the window.
+     *
+     * @param area the text area to configure; must not be null
+     * @throws NullPointerException if area is null
+     */
+    private void configureTextArea(final JTextArea area) {
+        if (area == null) {
+            logger.error("configureTextArea called with null area");
+            throw new NullPointerException("area must not be null");
+        }
+        area.setEditable(false);
+        area.setWrapStyleWord(true);
+        area.setLineWrap(true);
+        area.setAutoscrolls(true);
+        area.setCaretPosition(0);
+    }
+
+    /**
+     * Prevents the window from being iconified or maximized by forcing normal
+     * extended state whenever a window state change occurs.
      */
     private void keep() {
         this.setExtendedState(Frame.NORMAL);

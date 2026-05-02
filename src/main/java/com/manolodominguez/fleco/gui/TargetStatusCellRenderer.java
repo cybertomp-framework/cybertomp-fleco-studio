@@ -103,7 +103,6 @@ public class TargetStatusCellRenderer extends DefaultTableCellRenderer {
      * interpreted as a numeric value, the method logs a debug message and falls
      * back to default rendering.</li>
      * </ul>
-     * </p>
      *
      * @param table the {@link JTable} that uses this renderer; may be null in
      * erroneous calls (handled defensively)

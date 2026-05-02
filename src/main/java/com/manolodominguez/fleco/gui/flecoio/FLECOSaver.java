@@ -46,91 +46,207 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements FLECO file saver that can store a case from memory to a
- * file on disk.
+ * Saves FLECO cases from memory to disk using the official JSON format.
+ *
+ * <p>
+ * This class serializes:
+ * </p>
+ *
+ * <ul>
+ * <li>Initial chromosome status.</li>
+ * <li>Strategic constraints.</li>
+ * <li>Optional target chromosome status.</li>
+ * </ul>
+ *
+ * <p>
+ * The generated output is compatible with the FLECO loader and follows the
+ * expected JSON schema.
+ * </p>
  *
  * @author Manuel Domínguez-Dorado
  */
 public class FLECOSaver {
 
-    private Chromosome initialStatus;
-    private StrategicConstraints strategicConstraints;
-    private Chromosome targetStatus;
-    private FileOutputStream outputStream;
-    private PrintStream output;
-
-    private final Logger logger = LoggerFactory.getLogger(FLECOSaver.class);
+    /**
+     * JSON key for implementation group.
+     */
+    private static final String KEY_CASE_IMPLEMENTATION_GROUP = "caseIG";
 
     /**
-     * This is the constructor of the class.It creates a new FLECO loader and
-     * sets its initial values.
-     *
-     * @param initialStatus the initial status of the FLECO case being saved.
-     * @param strategicConstraints the strategic constraints of the FLECO case
-     * being saved.
-     * @param targetStatus the target status of the FLECO case being saved.
+     * JSON key for target status existence flag.
      */
-    public FLECOSaver(Chromosome initialStatus, StrategicConstraints strategicConstraints, Chromosome targetStatus) {
+    private static final String KEY_HAS_TARGET_STATUS = "hasTargetStatus";
+
+    /**
+     * JSON key for initial status.
+     */
+    private static final String KEY_INITIAL_STATUS = "initialStatus";
+
+    /**
+     * JSON key for strategic constraints.
+     */
+    private static final String KEY_STRATEGIC_CONSTRAINTS = "strategicConstraints";
+
+    /**
+     * JSON key for target status.
+     */
+    private static final String KEY_TARGET_STATUS = "targetStatus";
+
+    /**
+     * Logger instance.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(FLECOSaver.class);
+
+    /**
+     * Initial chromosome status to save.
+     */
+    private final Chromosome initialStatus;
+
+    /**
+     * Strategic constraints to save.
+     */
+    private final StrategicConstraints strategicConstraints;
+
+    /**
+     * Target chromosome status to save.
+     */
+    private final Chromosome targetStatus;
+
+    /**
+     * Creates a new FLECO saver instance.
+     *
+     * @param initialStatus initial chromosome status to save.
+     * @param strategicConstraints strategic constraints to save.
+     * @param targetStatus optional target chromosome status to save.
+     * @throws IllegalArgumentException if {@code initialStatus} is
+     * {@code null}.
+     */
+    public FLECOSaver(
+            final Chromosome initialStatus,
+            final StrategicConstraints strategicConstraints,
+            final Chromosome targetStatus) {
+
         if (initialStatus == null) {
-            logger.error("initialStatus is null");
-            throw new IllegalArgumentException("initialStatus is null");
+            LOGGER.error("Initial status cannot be null");
+            throw new IllegalArgumentException("Initial status cannot be null");
         }
+
         this.initialStatus = initialStatus;
         this.strategicConstraints = strategicConstraints;
         this.targetStatus = targetStatus;
-        outputStream = null;
-        output = null;
     }
 
     /**
-     * This method save a FLECO case from memory to a file on disk.
+     * Saves the current FLECO case to the specified file.
      *
-     * @param outputFile the destination file for the case being saved.
-     * @return true, if the FLECO case is saved to the specified file.
-     * Otherwise, false.
+     * <p>
+     * Existing file content will be overwritten.
+     * </p>
+     *
+     * @param outputFile destination file.
+     * @return {@code true} if the case was successfully saved. Otherwise,
+     * {@code false}.
+     * @throws IllegalArgumentException if {@code outputFile} is {@code null}.
      */
-    public boolean save(File outputFile) {
+    public boolean save(final File outputFile) {
         if (outputFile == null) {
-            logger.error("outputFile is null");
-            throw new IllegalArgumentException("outputFile is null");
+            LOGGER.error("Output file cannot be null");
+            throw new IllegalArgumentException("Output file cannot be null");
         }
-        try {
-            outputStream = new FileOutputStream(outputFile);
-            output = new PrintStream(this.outputStream);
-            output.println("{");
-            output.println("\t\"caseIG\":\"" + initialStatus.getImplementationGroup().name() + "\",");
-            if (targetStatus == null) {
-                output.println("\t\"hasTargetStatus\":false,");
-            } else {
-                output.println("\t\"hasTargetStatus\":true,");
-            }
-            // INITIAL STATUS
-            output.println("\t\"initialStatus\": [");
-            output.print(initialStatus.getGenesAsJSONString());
-            output.println("\t],");
-            // STRATEGIC CONSTRAINTS
-            output.println("\t\"strategicConstraints\": [");
-            output.print(strategicConstraints.getConstraintsAsJSONString());
-            output.println("\t],");
-            // TARGET STATUS
-            output.println("\t\"targetStatus\": [");
-            if (targetStatus != null) {
-                output.print(targetStatus.getGenesAsJSONString());
-            }
-            output.println("\t]");
-            output.println("}");
-            outputStream.close();
-            output.close();
+
+        if (strategicConstraints == null) {
+            LOGGER.error("Strategic constraints cannot be null");
+            throw new IllegalStateException("Strategic constraints cannot be null");
         }
-        catch (IOException e) {
-            logger.error("Error saving FLECO case to disk");
+
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile); PrintStream output = new PrintStream(outputStream)) {
+
+            writeJsonContent(output);
+
+            return true;
+        } catch (IOException ex) {
+            LOGGER.error(
+                    "Error saving FLECO case to disk. File: {}",
+                    outputFile.getAbsolutePath(),
+                    ex);
+
             return false;
         }
-        return true;
     }
 
+    /**
+     * Writes the FLECO JSON structure to the specified output stream.
+     *
+     * @param output destination print stream.
+     * @throws NullPointerException if {@code output} is {@code null}.
+     */
+    private void writeJsonContent(final PrintStream output) {
+        Objects.requireNonNull(output, "output");
+
+        output.println("{");
+
+        writeCaseHeader(output);
+        writeInitialStatus(output);
+        writeStrategicConstraints(output);
+        writeTargetStatus(output);
+
+        output.println("}");
+    }
+
+    /**
+     * Writes the JSON header section.
+     *
+     * @param output destination print stream.
+     */
+    private void writeCaseHeader(final PrintStream output) {
+        output.println(
+                "\t\"" + KEY_CASE_IMPLEMENTATION_GROUP + "\":\""
+                + initialStatus.getImplementationGroup().name() + "\",");
+
+        output.println(
+                "\t\"" + KEY_HAS_TARGET_STATUS + "\":"
+                + (targetStatus != null) + ",");
+    }
+
+    /**
+     * Writes the initial chromosome status section.
+     *
+     * @param output destination print stream.
+     */
+    private void writeInitialStatus(final PrintStream output) {
+        output.println("\t\"" + KEY_INITIAL_STATUS + "\": [");
+        output.print(initialStatus.getGenesAsJSONString());
+        output.println("\t],");
+    }
+
+    /**
+     * Writes the strategic constraints section.
+     *
+     * @param output destination print stream.
+     */
+    private void writeStrategicConstraints(final PrintStream output) {
+        output.println("\t\"" + KEY_STRATEGIC_CONSTRAINTS + "\": [");
+        output.print(strategicConstraints.getConstraintsAsJSONString());
+        output.println("\t],");
+    }
+
+    /**
+     * Writes the target chromosome status section.
+     *
+     * @param output destination print stream.
+     */
+    private void writeTargetStatus(final PrintStream output) {
+        output.println("\t\"" + KEY_TARGET_STATUS + "\": [");
+
+        if (targetStatus != null) {
+            output.print(targetStatus.getGenesAsJSONString());
+        }
+
+        output.println("\t]");
+    }
 }

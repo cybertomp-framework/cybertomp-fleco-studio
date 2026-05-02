@@ -146,8 +146,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This is the constructor of the class, it creates a new instance of
      * MainWindow and sets the initial values for all its attributes.
      *
-     * @author Manuel Domínguez-Dorado
-     *
      * @throws HeadlessException when executed in a context without graphic
      * environment.
      */
@@ -427,8 +425,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * the main table of FLECO Studio is done. It opens a pop up window
      * containing additional information regarding the cybersecurity action that
      * was clicked on.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onDoubleClicOnTable(JTable table) {
         try {
@@ -476,8 +472,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called when a clic on "Load" menu item or "Load" icon is
      * done. It allow loadin ga previously saved FLECO case from disk to
      * continue working on it.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onLoad() {
         boolean load = false;
@@ -598,8 +592,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called when a the Save option are chosen from the menú. It
      * makes everything needed to save the file if it needs to be saved and
      * update the GUI accordingly.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private boolean onSave() {
         boolean saved = false;
@@ -661,8 +653,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called when a the Save as option are chosen from the menú.
      * It makes everything needed to save the file if it needs to be saved with
      * a name and update the GUI accordingly.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private boolean onSaveAs() {
         boolean saved = false;
@@ -750,8 +740,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called when a the Exit option are chosen from the menú or
      * the main windows Close button is pressed. It makes everything needed to
      * exit FLECO Studio safely.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onExit() {
         if (popUp != null) {
@@ -791,8 +779,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     /**
      * This method is called when a the About option are chosen from the menú.
      * It opens in a web browser the URL of the project in Github.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onAbout() {
         if (Desktop.isDesktopSupported()) {
@@ -811,8 +797,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     /**
      * This method is called when a the FLECO License option are chosen from the
      * menú. It opens in a web browser the URL of the project's license.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onFLECOLicense() {
         if (Desktop.isDesktopSupported()) {
@@ -831,8 +815,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     /**
      * This method is link the table in the GUI to its corresponding model,
      * specified as an argument.
-     *
-     * @author Manuel Domínguez-Dorado
      * @param tableModel the model to associate the GUI's table to.
      */
     private void configureMainTable(FLECOTableModel tableModel) {
@@ -864,8 +846,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called when a clic on Constraints icon is done in the
      * toolbar. It creates automatically a constraint for every expected outcome
      * as GREATER_OR_EQUAL and the current value of them.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onConstraints() {
         caseConfig.getStrategicConstraints().removeAll();
@@ -971,8 +951,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called when a clic on New icon is done in the toolbar or
      * the same option is chosen from the menu. It creates a new case, taking
      * care of the current one if there is such a current case.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onNew() {
         boolean donew = false;
@@ -1061,8 +1039,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * toolbar or the same option is chosen from the menu. It start running
      * FLECO to find a target status that fulfill the defined constraints. It
      * also takes care of the current case as it is going to be modified.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void onRunFLECO() {
         boolean run = false;
@@ -1142,8 +1118,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     /**
      * This method is called automatically when a FLECO execution finishes,
      * independently of its result. It updates the case and the GUI as needed.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     @Override
     public void afterOnRunFLECO() {
@@ -1189,8 +1163,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * This method is called automatically when a modification is done in the
      * GUI's table. It prepares theFLECO Studio to know there are changes that
      * has to be saved (or specifically discarded) in a future moment.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     @Override
     public void onFLECOTableModelChanged() {

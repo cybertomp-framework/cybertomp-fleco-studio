@@ -63,8 +63,6 @@ public class TargetStatusCellRenderer extends DefaultTableCellRenderer {
     /**
      * This is the constructor of the class. It sets the initial values of all
      * attributes and create a new instance.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public TargetStatusCellRenderer() {
         super();
@@ -76,7 +74,6 @@ public class TargetStatusCellRenderer extends DefaultTableCellRenderer {
      * initial status, for all metrics and highlights the target status ones
      * when they differ from the initial status ones.
      *
-     * @author Manuel Domínguez-Dorado
      * @param table The JTable this method is rendering cells for.
      * @param value the value in the corresponding cell (row and column).
      * @param isSelected true, if the correspondig cell (row, column) is

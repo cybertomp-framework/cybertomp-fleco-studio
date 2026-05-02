@@ -94,8 +94,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with their default values.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param table the table whose columns width are going to be managed.
      */
     public TableColumnAdjuster(JTable table) {
@@ -106,8 +104,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with the values specified as parameters.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param table teh table whose columns width are going to be managed.
      * @param spacing the table's default spacing between columns.
      */
@@ -126,8 +122,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     /**
      * This methods adjust the width of every column in the table.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      */
     public void adjustColumns() {
         TableColumnModel tableColumnModel = table.getColumnModel();
@@ -139,8 +133,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     /**
      * This methods adjust the width of the column specified as an argument.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param column the index of the column to adjust.
      */
     public void adjustColumn(int column) {
@@ -158,8 +150,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods computes the required width of the column header specified
      * as an argument.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param column the index of the column header whose width is being
      * computed.
      */
@@ -181,8 +171,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods computes the required width of the column specified as an
      * argument.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param column the index of the column whose width is being computed.
      */
     private int getColumnDataWidth(int column) {
@@ -205,8 +193,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods computes the required width for a specific cell determined
      * by a the row and the column soecified as an argument.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param row The row that determines the cell.
      * @param column The column that determines the cell.
      */
@@ -221,8 +207,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This method updates the specified column's width with the value specified
      * as an argument.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param width The new width value for the column.
      * @param column The column to be adjusted.
      */
@@ -243,9 +227,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
     /**
      * This method restores every column in the table to its previous width.
-     *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      */
     public void restoreColumns() {
         TableColumnModel tableColumnModel = table.getColumnModel();
@@ -258,8 +239,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods restores the width of the column specified as an argument to
      * its previous width.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param column the index of the column to adjust.
      */
     private void restoreColumn(int column) {
@@ -275,8 +254,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods sets whether the column header is counted on the computation
      * of the column width or not.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param isColumnHeaderIncluded whether the column header is counted on the
      * computation of the column width or not.
      */
@@ -288,8 +265,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods sets whether the column data is counted on the computation
      * of the column width or not.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param isColumnDataIncluded whether the column data is counted on the
      * computation of the column width or not.
      */
@@ -301,8 +276,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods sets whether the column mus be shrinked apart from enlarged,
      * if needed.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param isOnlyEnlargeColumn whether the column mus be shrinked apart from
      * enlarged, if needed.
      */
@@ -314,8 +287,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods sets whether changes to the model should cause the width to
      * be dynamically recalculated.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param isDynamicAdjustment whether changes to the model should cause the
      * width to be dynamically recalculated.
      */
@@ -336,8 +307,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods is called when there is a change in a table property. It is
      * used to adjusting all columns when the table model change.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param e The property change event that informs of the change in a table
      * property.
      */
@@ -358,8 +327,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
      * This methods is called when there is a change in a table model. It is
      * used to adjusting all columns when the content of a cell varies.
      *
-     * @author Rob Camick
-     * @author Manuel Domínguez-Dorado
      * @param e The table model event that informs of the change within a table.
      */
     @Override

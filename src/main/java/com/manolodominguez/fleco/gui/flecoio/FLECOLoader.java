@@ -85,8 +85,6 @@ public class FLECOLoader {
     /**
      * This is the constructor of the class. It creates a new FLECO loader and
      * sets its initial values.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public FLECOLoader() {
         inputStream = null;
@@ -102,7 +100,6 @@ public class FLECOLoader {
      * if the content complies with FLECO format, the case is loaded into
      * memory.
      *
-     * @author Manuel Domínguez-Dorado
      * @param inputFile the file being loaded.
      * @return true, if a FLECO case is loaded from the specified file.
      * Otherwise, false.
@@ -138,7 +135,6 @@ public class FLECOLoader {
      * This method load a FLECO case that is expressed in the forma of a valid
      * JSON object into memory.
      *
-     * @author Manuel Domínguez-Dorado
      * @param validatedJSONFLECOCase the JSON object that represent a valid
      * FLECO case.
      * @return true, if a FLECO case is loaded from the specified JSON object.
@@ -215,7 +211,6 @@ public class FLECOLoader {
      * This method check whether the JSON object specified as an argument is a
      * valid FLECO case.
      *
-     * @author Manuel Domínguez-Dorado
      * @param jsonFLECOCase the JSON object that represent, allegedly, a valid
      * FLECO case.
      * @return true, if the specified jsonFLECOCase object is a valid FLECO
@@ -241,7 +236,6 @@ public class FLECOLoader {
      * This method return the initial status corresponding to the loaded FLECO
      * case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the initial status corresponding to the loaded FLECO case.
      */
     public Chromosome getInitialStatus() {
@@ -253,7 +247,6 @@ public class FLECOLoader {
      * This method return the strategic constraints corresponding to the loaded
      * FLECO case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the strategic constraints corresponding to the loaded FLECO case.
      */
     public StrategicConstraints getStrategicConstraints() {
@@ -264,7 +257,6 @@ public class FLECOLoader {
      * This method return the target status corresponding to the loaded FLECO
      * case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the target status corresponding to the loaded FLECO case.
      */
     public Chromosome getTargetStatus() {

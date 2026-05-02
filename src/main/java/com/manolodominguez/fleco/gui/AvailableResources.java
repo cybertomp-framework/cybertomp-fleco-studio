@@ -62,7 +62,6 @@ public enum AvailableResources {
      *
      * @param resourceFileName the filename that corresponds to the new
      * available resource created.
-     * @author Manuel Domínguez-Dorado
      */
     private AvailableResources(String resourceFileName) {
         this.resourceFileName = resourceFileName;
@@ -72,7 +71,6 @@ public enum AvailableResources {
      * This methods gets the complete file path to the resource associated to
      * the enum item.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the complete file path to the resource associated to the enum
      * item.
      */

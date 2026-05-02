@@ -60,7 +60,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Manuel Domínguez-Dorado
  */
-@SuppressWarnings("serial")
 public class FLECOTableModel extends AbstractTableModel {
 
     public static final int CYBERTOMP_METRIC_KEY = 0;
@@ -75,6 +74,7 @@ public class FLECOTableModel extends AbstractTableModel {
     private static final int MAX_COLUMNS = 8;
     private static final int ASSET_ROW = 0;
     private static final String NO_CONSTRAINT = "N/A";
+    private static final long serialVersionUID = 1L;
 
     private StrategicConstraints strategicConstraints;
     private ImplementationGroups implementationGroup;
@@ -95,12 +95,11 @@ public class FLECOTableModel extends AbstractTableModel {
     private IFLECOTableModelChangeListener changeEventListener;
 
     private final Logger logger = LoggerFactory.getLogger(FLECOTableModel.class);
-    
+
     /**
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with their default values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus the initial status of the case being solved by
      * FLECO.
      * @param strategicConstraints The strategic constraints that FLECO must
@@ -146,7 +145,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the listener that is going to be called when any change
      * in the table model happens, to update whatever needed.
      *
-     * @author Manuel Domínguez-Dorado
      * @param changeEventListener the listener that is going to be called when
      * any change in the table model happens
      */
@@ -161,7 +159,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method sets the target status of the case, computed by FLECO.
      *
-     * @author Manuel Domínguez-Dorado
      * @param targetStatus the target status of the case, computed by FLECO.
      */
     public void setTargetStatus(Chromosome targetStatus) {
@@ -178,7 +175,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the target status of the case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the target status of the case.
      */
     public Chromosome getTargetStatus() {
@@ -189,7 +185,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the strategic constraints that FLECO must apply to the
      * case.
      *
-     * @author Manuel Domínguez-Dorado
      * @param strategicConstraints the strategic constraints that FLECO must
      * apply to the case
      */
@@ -207,7 +202,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method sets the initial status of the case that FLECO must solve.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus the initial status of the case that FLECO must
      * solve.
      */
@@ -251,8 +245,6 @@ public class FLECOTableModel extends AbstractTableModel {
 
     /**
      * This method removes the target status of the case.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void removeTargetStatus() {
         targetStatus = null;
@@ -261,8 +253,6 @@ public class FLECOTableModel extends AbstractTableModel {
 
     /**
      * This method removes the strategic constraints of the case.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void removeStrategicConstraints() {
         if (strategicConstraints != null) {
@@ -272,8 +262,6 @@ public class FLECOTableModel extends AbstractTableModel {
 
     /**
      * This method removes the initial status of the case.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void removeInitialStatus() {
         targetStatus = null;
@@ -283,7 +271,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the implementation group of the case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the implementation group of the case.
      */
     public ImplementationGroups getImplementationGroup() {
@@ -293,7 +280,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the strategic constraints of the case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the strategic constraints of the case.
      */
     public StrategicConstraints getStrategicConstraints() {
@@ -303,7 +289,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the initial status of the case.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the initial status of the case.
      */
     public Chromosome getInitialStatus() {
@@ -313,7 +298,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the number of columns in the table model.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the number of columns in the table model.
      */
     @Override
@@ -325,7 +309,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the name of the specified colum in the table to be use
      * as header.
      *
-     * @author Manuel Domínguez-Dorado
      * @param column the column whose name are needed.
      * @return the name of the specified colum in the table to be use as header.
      */
@@ -357,7 +340,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the type of the specified colum in the table.
      *
-     * @author Manuel Domínguez-Dorado
      * @param column the column whose type is needed.
      * @return the type of the specified colum in the table to be use as header.
      */
@@ -393,7 +375,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method gets the number of rows in the table model.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the number of rows in the table model.
      */
     @Override
@@ -408,7 +389,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets whether the specific cell determined by row and column
      * is editable or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the row that determines the cell.
      * @param column the column that determines the cell.
      * @return TRUE if the cell determined by row and column is editable.
@@ -437,7 +417,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the value of the specific cell determined by row and
      * column.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the row that determines the cell.
      * @param column the column that determines the cell.
      * @return the value of the specific cell determined by row and column.
@@ -473,7 +452,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the acronym corresponding to the CyberTOMP metric that
      * is located in the row specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the acronym corresponding to the CyberTOMP metric that is located
      * in the row specified as an argument.
@@ -484,20 +462,17 @@ public class FLECOTableModel extends AbstractTableModel {
                 // Case it is an expected outcome
                 Genes gene = Genes.valueOf((String) getValueAt(row, 0));
                 return "            " + gene.getAcronym();
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 try {
                     // Case it is a category
                     Categories category = Categories.valueOf((String) getValueAt(row, 0));
                     return "        " + category.getAcronym();
-                }
-                catch (IllegalArgumentException e2) {
+                } catch (IllegalArgumentException e2) {
                     try {
                         // Case it is a function
                         Functions function = Functions.valueOf((String) getValueAt(row, 0));
                         return "    " + function.getAcronym();
-                    }
-                    catch (IllegalArgumentException e3) {
+                    } catch (IllegalArgumentException e3) {
                         // Case it is the highest level: (sub)asset
                         return "BUSINESS (SUB)ASSET";
                     }
@@ -511,7 +486,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the purpose corresponding to the CyberTOMP metric that
      * is located in the row specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the purpose corresponding to the CyberTOMP metric that is located
      * in the row specified as an argument.
@@ -522,20 +496,17 @@ public class FLECOTableModel extends AbstractTableModel {
                 // Case it is an expected outcome
                 Genes gene = Genes.valueOf((String) getValueAt(row, 0));
                 return gene.getPurpose();
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 try {
                     // Case it is a category
                     Categories category = Categories.valueOf((String) getValueAt(row, 0));
                     return category.getPurpose();
-                }
-                catch (IllegalArgumentException e2) {
+                } catch (IllegalArgumentException e2) {
                     try {
                         // Case it is a function
                         Functions function = Functions.valueOf((String) getValueAt(row, 0));
                         return function.getPurpose();
-                    }
-                    catch (IllegalArgumentException e3) {
+                    } catch (IllegalArgumentException e3) {
                         // Case it is a function
                         return "---";
                     }
@@ -550,7 +521,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * of actions corresponding to the CyberTOMP metric that is located in the
      * row specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the functional area that should lead the implementation of
      * actions corresponding to the CyberTOMP metric that is located in the row
@@ -562,8 +532,7 @@ public class FLECOTableModel extends AbstractTableModel {
                 // Case it is an expected outcome
                 Genes gene = Genes.valueOf((String) getValueAt(row, 0));
                 return gene.getLeadingFunctionalArea().getAreaName();
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 // Case it is a category, function or asset
                 return FunctionalAreas.SEVERAL.getAreaName();
             }
@@ -575,7 +544,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the CyberTOMP metric that is located in the row
      * specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the CyberTOMP metric that is located in the row pecified as an
      * argument.
@@ -591,7 +559,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the CyberTOMP metric that is located in the row
      * specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @param value the CyberTOMP metric to be set for the specified row.
      * @return the CyberTOMP metric that is located in the row pecified as an
@@ -605,7 +572,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the initial status that is located in the row specified
      * as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the initial status that is located in the row specified as an
      * argument.
@@ -616,18 +582,15 @@ public class FLECOTableModel extends AbstractTableModel {
             try {
                 // Case it is an expected outcome
                 return genesValuesInitialStatus.get(Genes.valueOf((String) getValueAt(row, 0)));
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 try {
                     // Case it is a category
                     return categoriesValuesInitialStatus.get(Categories.valueOf((String) getValueAt(row, 0)));
-                }
-                catch (IllegalArgumentException e2) {
+                } catch (IllegalArgumentException e2) {
                     try {
                         // Case it is an asset
                         return functionsValuesInitialStatus.get(Functions.valueOf((String) getValueAt(row, 0)));
-                    }
-                    catch (IllegalArgumentException e3) {
+                    } catch (IllegalArgumentException e3) {
                         // Case it is a function
                         return assetValueInitialStatus;
                     }
@@ -641,7 +604,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the target status that is located in the row specified
      * as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the target status that is located in the row specified as an
      * argument.
@@ -652,18 +614,15 @@ public class FLECOTableModel extends AbstractTableModel {
             try {
                 // Case it is an expected outcome
                 return genesValuesTargetStatus.get(Genes.valueOf((String) getValueAt(row, 0)));
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 try {
                     // Case it is a category
                     return categoriesValuesTargetStatus.get(Categories.valueOf((String) getValueAt(row, 0)));
-                }
-                catch (IllegalArgumentException e2) {
+                } catch (IllegalArgumentException e2) {
                     try {
                         // Case it is an asset
                         return functionsValuesTargetStatus.get(Functions.valueOf((String) getValueAt(row, 0)));
-                    }
-                    catch (IllegalArgumentException e3) {
+                    } catch (IllegalArgumentException e3) {
                         // Case it is a function
                         return assetValueTargetStatus;
                     }
@@ -677,7 +636,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the constraint's operator that is located in the row
      * specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the constraint's operator that is located in the row specified as
      * an argument.
@@ -692,8 +650,7 @@ public class FLECOTableModel extends AbstractTableModel {
                         return strategicConstraints.getConstraint(gene).getComparisonOperator().name();
                     }
                 }
-            }
-            catch (IllegalArgumentException e1) {
+            } catch (IllegalArgumentException e1) {
                 try {
                     // Case it is a category
                     Categories category = Categories.valueOf(metricsKeys[row]);
@@ -702,8 +659,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             return strategicConstraints.getConstraint(category).getComparisonOperator().name();
                         }
                     }
-                }
-                catch (IllegalArgumentException e2) {
+                } catch (IllegalArgumentException e2) {
                     try {
                         // Case it is a function
                         Functions function = Functions.valueOf(metricsKeys[row]);
@@ -712,8 +668,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                 return strategicConstraints.getConstraint(function).getComparisonOperator().name();
                             }
                         }
-                    }
-                    catch (IllegalArgumentException e3) {
+                    } catch (IllegalArgumentException e3) {
                         // Case it is an asset
                         if (row == ASSET_ROW) {
                             if (strategicConstraints.hasDefinedConstraint()) {
@@ -732,7 +687,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method gets the constraint's value that is located in the row
      * specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param row the specified row.
      * @return the constraint's value that is located in the row specified as an
      * argument.
@@ -747,8 +701,7 @@ public class FLECOTableModel extends AbstractTableModel {
                         return (Float) strategicConstraints.getConstraint(gene).getThreshold();
                     }
                 }
-            }
-            catch (IllegalArgumentException e1) {
+            } catch (IllegalArgumentException e1) {
                 try {
                     // Case it is a category
                     Categories category = Categories.valueOf(metricsKeys[row]);
@@ -757,8 +710,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             return (Float) strategicConstraints.getConstraint(category).getThreshold();
                         }
                     }
-                }
-                catch (IllegalArgumentException e2) {
+                } catch (IllegalArgumentException e2) {
                     try {
                         // Case it is a function
                         Functions function = Functions.valueOf(metricsKeys[row]);
@@ -767,8 +719,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                 return (Float) strategicConstraints.getConstraint(function).getThreshold();
                             }
                         }
-                    }
-                    catch (IllegalArgumentException e3) {
+                    } catch (IllegalArgumentException e3) {
                         // Case it is an asset
                         if (row == ASSET_ROW) {
                             if (strategicConstraints.hasDefinedConstraint()) {
@@ -787,7 +738,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the value of the cell determined by the row and column
      * specified as arguments.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value the value to be asigned to the cell.
      * @param row the specified row.
      * @param column the specified column.
@@ -821,7 +771,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the initial status that corresponds to the row specified
      * as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value the value to be asigned to initial status column.
      * @param row the specified row.
      */
@@ -848,8 +797,7 @@ public class FLECOTableModel extends AbstractTableModel {
                         fireTableCellUpdated(j, CURRENT_STATUS);
                     }
                 }
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 logger.error("ERROR en setInitialStatusAt");
             }
         }
@@ -859,7 +807,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the constraint's operator that corresponds to the row
      * specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value the value to be asigned to constraint's operator column.
      * @param row the specified row.
      */
@@ -873,18 +820,15 @@ public class FLECOTableModel extends AbstractTableModel {
             try {
                 Genes.valueOf(metricsKeys[row]);
                 typeOfMetric = GENE;
-            }
-            catch (IllegalArgumentException e11) {
+            } catch (IllegalArgumentException e11) {
                 try {
                     Categories.valueOf(metricsKeys[row]);
                     typeOfMetric = CATEGORY;
-                }
-                catch (IllegalArgumentException e12) {
+                } catch (IllegalArgumentException e12) {
                     try {
                         Functions.valueOf(metricsKeys[row]);
                         typeOfMetric = FUNCTION;
-                    }
-                    catch (IllegalArgumentException e13) {
+                    } catch (IllegalArgumentException e13) {
                         typeOfMetric = ASSET;
                     }
                 }
@@ -924,8 +868,7 @@ public class FLECOTableModel extends AbstractTableModel {
                         fireTableCellUpdated(j, CONSTRAINT_VALUE);
                     }
                 }
-            }
-            catch (IllegalArgumentException e2) {
+            } catch (IllegalArgumentException e2) {
                 try {
                     ComparisonOperators comparisonOperator;
                     if (value instanceof String) {
@@ -961,8 +904,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             fireTableCellUpdated(j, CONSTRAINT_VALUE);
                         }
                     }
-                }
-                catch (IllegalArgumentException e3) {
+                } catch (IllegalArgumentException e3) {
                     try {
                         ComparisonOperators comparisonOperator;
                         if (value instanceof String) {
@@ -999,8 +941,7 @@ public class FLECOTableModel extends AbstractTableModel {
 
                             }
                         }
-                    }
-                    catch (IllegalArgumentException e4) {
+                    } catch (IllegalArgumentException e4) {
                         try {
                             ComparisonOperators comparisonOperator;
                             if (value instanceof String) {
@@ -1036,8 +977,7 @@ public class FLECOTableModel extends AbstractTableModel {
 
                                 }
                             }
-                        }
-                        catch (IllegalArgumentException e5) {
+                        } catch (IllegalArgumentException e5) {
                             logger.error("ERROR en setConstraintOperatorAt");
                         }
                     }
@@ -1050,7 +990,6 @@ public class FLECOTableModel extends AbstractTableModel {
      * This method sets the constraint's value that corresponds to the row
      * specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param value the value to be asigned to constraint's value column.
      * @param row the specified row.
      */
@@ -1080,26 +1019,22 @@ public class FLECOTableModel extends AbstractTableModel {
                             threshold = 1.0f;
                         }
                     }
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     logger.error("Nuevo valor no es un float: " + ((String) value));
                 }
             }
             try {
                 Genes.valueOf(metricsKeys[row]);
                 typeOfMetric = GENE;
-            }
-            catch (IllegalArgumentException e11) {
+            } catch (IllegalArgumentException e11) {
                 try {
                     Categories.valueOf(metricsKeys[row]);
                     typeOfMetric = CATEGORY;
-                }
-                catch (IllegalArgumentException e12) {
+                } catch (IllegalArgumentException e12) {
                     try {
                         Functions.valueOf(metricsKeys[row]);
                         typeOfMetric = FUNCTION;
-                    }
-                    catch (IllegalArgumentException e13) {
+                    } catch (IllegalArgumentException e13) {
                         typeOfMetric = ASSET;
                     }
                 }
@@ -1124,8 +1059,7 @@ public class FLECOTableModel extends AbstractTableModel {
                         fireTableCellUpdated(j, CONSTRAINT_VALUE);
                     }
                 }
-            }
-            catch (IllegalArgumentException e2) {
+            } catch (IllegalArgumentException e2) {
                 try {
                     ComparisonOperators comparisonOperator;
                     if (value instanceof String) {
@@ -1145,8 +1079,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             fireTableCellUpdated(j, CONSTRAINT_VALUE);
                         }
                     }
-                }
-                catch (IllegalArgumentException e3) {
+                } catch (IllegalArgumentException e3) {
                     try {
                         ComparisonOperators comparisonOperator;
                         if (value instanceof String) {
@@ -1166,8 +1099,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                 fireTableCellUpdated(j, CONSTRAINT_VALUE);
                             }
                         }
-                    }
-                    catch (IllegalArgumentException e4) {
+                    } catch (IllegalArgumentException e4) {
                         try {
                             ComparisonOperators comparisonOperator;
                             if (value instanceof String) {
@@ -1186,8 +1118,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                     fireTableCellUpdated(j, CONSTRAINT_VALUE);
                                 }
                             }
-                        }
-                        catch (IllegalArgumentException e5) {
+                        } catch (IllegalArgumentException e5) {
                             logger.error("ERROR en setConstraintValueAt");
                         }
                     }
@@ -1199,8 +1130,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method computes the initial status of categories and functions from
      * the corresponding expected outcome's value.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void computeValuesForInitialStatus() {
         genesValuesInitialStatus = new EnumMap<>(Genes.class);
@@ -1258,8 +1187,6 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * This method computes the target status of categories and functions from
      * the corresponding expected outcome's value.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void computeValuesForTargetStatus() {
         genesValuesTargetStatus = new EnumMap<>(Genes.class);

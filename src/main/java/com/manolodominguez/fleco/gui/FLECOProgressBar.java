@@ -61,8 +61,6 @@ public class FLECOProgressBar extends JProgressBar implements IFLECOProgressEven
     /**
      * This is the constructor of the class. it creates a new instance of
      * FLECOProgressBar and initialize its attributes.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public FLECOProgressBar() {
         super();
@@ -74,7 +72,6 @@ public class FLECOProgressBar extends JProgressBar implements IFLECOProgressEven
      *
      * @param progressEvent the progress event sent by amn instance of FLECO
      * algorithm.
-     * @author Manuel Domínguez-Dorado
      */
     @Override
     public void onProgressEventReceived(ProgressEvent progressEvent) {

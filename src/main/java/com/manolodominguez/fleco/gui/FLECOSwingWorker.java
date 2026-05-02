@@ -62,7 +62,6 @@ public class FLECOSwingWorker extends SwingWorker<FLECO, FLECO> {
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with their default values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param fleco The instance of FLECO algorithm to be run in background.
      * @param gui The GUI from which FLECO is launched.
      */
@@ -74,7 +73,6 @@ public class FLECOSwingWorker extends SwingWorker<FLECO, FLECO> {
     /**
      * This method executes the FLECO algorithm in background.
      *
-     * @author Manuel Domínguez-Dorado
      * @return The executed instance of the FLECO algorithm.
      * @throws Exception when something uncontrolled happens while computing in
      * background.
@@ -91,8 +89,6 @@ public class FLECOSwingWorker extends SwingWorker<FLECO, FLECO> {
      * This method is called when the background execution is finished. It calls
      * a methoid of the GUI in order to update the corresponding components if
      * needed.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     @Override
     protected void done() {

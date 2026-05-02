@@ -69,7 +69,6 @@ public class FLECOSaver {
      * This is the constructor of the class.It creates a new FLECO loader and
      * sets its initial values.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus the initial status of the FLECO case being saved.
      * @param strategicConstraints the strategic constraints of the FLECO case
      * being saved.
@@ -90,7 +89,6 @@ public class FLECOSaver {
     /**
      * This method save a FLECO case from memory to a file on disk.
      *
-     * @author Manuel Domínguez-Dorado
      * @param outputFile the destination file for the case being saved.
      * @return true, if the FLECO case is saved to the specified file.
      * Otherwise, false.

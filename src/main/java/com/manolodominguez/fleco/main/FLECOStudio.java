@@ -40,7 +40,6 @@
  */
 package com.manolodominguez.fleco.main;
 
-import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.gui.MainWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -60,7 +59,6 @@ public class FLECOStudio {
      * This method isthe entry point in FLECO Studio. It starts the graphics
      * application when used as an standalone one instead of a library.
      *
-     * @author Manuel Domínguez-Dorado
      * @param args the command line arguments. This parameter is required but
      * not used.
      */

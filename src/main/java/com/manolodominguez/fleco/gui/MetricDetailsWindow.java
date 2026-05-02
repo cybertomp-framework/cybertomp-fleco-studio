@@ -97,7 +97,6 @@ public class MetricDetailsWindow extends JFrame {
      * it with information related to the gene (expected aoutcome) specified as
      * an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param parent The windows this class is instantiated from. Used to
      * compute the screen position of this window.
      * @param gene The gene (expected outcome) whose information is being
@@ -120,7 +119,6 @@ public class MetricDetailsWindow extends JFrame {
      * This is the constructor of the class.It creates a new instance and fills
      * it with information related to the category specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param parent The windows this class is instantiated from. Used to
      * compute the screen position of this window.
      * @param category The category whose information is being presented in this
@@ -143,7 +141,6 @@ public class MetricDetailsWindow extends JFrame {
      * This is the constructor of the class.It creates a new instance and fills
      * it with information related to the function specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param parent The windows this class is instantiated from. Used to
      * compute the screen position of this window.
      * @param function The function whose information is being presented in this
@@ -166,7 +163,6 @@ public class MetricDetailsWindow extends JFrame {
      * This is the constructor of the class.It creates a new instance and fills
      * it with information related to the business asset.
      *
-     * @author Manuel Domínguez-Dorado
      * @param parent The windows this class is instantiated from. Used to
      * compute the screen position of this window.
      */
@@ -185,8 +181,6 @@ public class MetricDetailsWindow extends JFrame {
 
     /**
      * This method creates all common graphical components of the window.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void initCommonComponents() {
         imageBroker = new ImageBroker();
@@ -270,8 +264,6 @@ public class MetricDetailsWindow extends JFrame {
 
     /**
      * This method prevent the window from being iconified or maximized.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     private void keep() {
         this.setExtendedState(Frame.NORMAL);

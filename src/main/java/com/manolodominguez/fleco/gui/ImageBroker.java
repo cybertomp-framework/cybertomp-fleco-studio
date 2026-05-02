@@ -63,8 +63,6 @@ public class ImageBroker {
     /**
      * This method is the constructor of the class. It is create a new instance
      * of ImageBroker.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     ImageBroker() {
         this.imageIcons16x16 = new EnumMap<>(AvailableImages.class);
@@ -85,7 +83,6 @@ public class ImageBroker {
      * the singleton pattern, this checks whether a new instance has to be
      * created or the existing one has to be returned.
      *
-     * @author Manuel Domínguez-Dorado
      * @return An instance of ImageBroker
      */
     public static ImageBroker getInstance() {
@@ -104,7 +101,6 @@ public class ImageBroker {
     /**
      * This method request a given image from the ImageBroker.
      *
-     * @author Manuel Domínguez-Dorado
      * @param imageID The image ID the is requested.
      * @return The requested image or a default one if the requested image is
      * not found.
@@ -120,7 +116,6 @@ public class ImageBroker {
     /**
      * This method request a given image from the ImageBroker.
      *
-     * @author Manuel Domínguez-Dorado
      * @param imageID The image ID the is requested.
      * @return The requested image or a default one if the requested image is
      * not found.
@@ -136,7 +131,6 @@ public class ImageBroker {
     /**
      * This method request a given image icon from the ImageBroker.
      *
-     * @author Manuel Domínguez-Dorado
      * @param imageID The image ID the is requested.
      * @return The requested image icon or a default one if the requested image
      * icon is not found.
@@ -152,7 +146,6 @@ public class ImageBroker {
     /**
      * This method request a given image icon from the ImageBroker.
      *
-     * @author Manuel Domínguez-Dorado
      * @param imageID The image ID the is requested.
      * @return The requested image icon or a default one if the requested image
      * icon is not found.

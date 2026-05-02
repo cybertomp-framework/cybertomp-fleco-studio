@@ -53,8 +53,6 @@ public interface IFLECOTableModelChangeListener extends EventListener {
     /**
      * This method, once implemented, will be called by a FLECO table model to
      * adversise that at least one of their values has changed.
-     *
-     * @author Manuel Domínguez Dorado
      */
     public void onFLECOTableModelChanged();
 }

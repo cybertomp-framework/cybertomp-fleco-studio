@@ -40,7 +40,6 @@
  */
 package com.manolodominguez.fleco.gui;
 
-import com.manolodominguez.fleco.gui.flecoio.FLECOSaver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +75,6 @@ public enum AvailableImages {
      *
      * @param imageFilename the filename that corresponds to the new available
      * image created.
-     * @author Manuel Domínguez Dorado
      */
     private AvailableImages(String imageFileName) {
         this.imageFileName = imageFileName;
@@ -86,7 +84,6 @@ public enum AvailableImages {
      * This methods gets the complete file path to the image associated to the
      * enum item in a 16x16 pixel format.
      *
-     * @author Manuel Domínguez Dorado
      * @return the complete file path to the image associated to the enum item
      * in a 16x16 pixel format.
      */
@@ -98,7 +95,6 @@ public enum AvailableImages {
      * This methods gets the complete file path to the image associated to the
      * enum item in a 32x32 pixel format.
      *
-     * @author Manuel Domínguez Dorado
      * @return the complete file path to the image associated to the enum item
      * in a 32x32 pixel format.
      */

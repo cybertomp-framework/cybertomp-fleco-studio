@@ -71,8 +71,6 @@ public class CaseConfig {
     /**
      * This is the constructor of the class. It creates a new instance and
      * assigns the attributes their initial values.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public CaseConfig() {
         fleco = null;
@@ -88,8 +86,6 @@ public class CaseConfig {
 
     /**
      * This method reset all the attributes to their default values.
-     *
-     * @author Manuel Domínguez-Dorado
      */
     public void reset() {
         fleco = null;
@@ -106,7 +102,6 @@ public class CaseConfig {
     /**
      * This method gets the FLECO instance of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the FLECO instacne of the case being considered.
      */
     public FLECO getFleco() {
@@ -117,7 +112,6 @@ public class CaseConfig {
      * This method sets the FLECO instance of the case being considered using
      * the FLECO instance specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param fleco the FLECO instance of the case being considered.
      */
     public void setFleco(FLECO fleco) {
@@ -127,7 +121,6 @@ public class CaseConfig {
     /**
      * This method gets the initial status of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the initial status of the case being considered
      */
     public Chromosome getInitialStatus() {
@@ -138,7 +131,6 @@ public class CaseConfig {
      * This method sets the initial status of the case being considered using
      * the one specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialStatus the initial status of the case being considered.
      */
     public void setInitialStatus(Chromosome initialStatus) {
@@ -148,7 +140,6 @@ public class CaseConfig {
     /**
      * This method gets the strategic constraints of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the strategic constraints of the case being considered.
      */
     public StrategicConstraints getStrategicConstraints() {
@@ -159,7 +150,6 @@ public class CaseConfig {
      * This method sets the strategic constraints of the case being considered
      * using the one specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param strategicConstraints the strategic constraints of the case being
      * considered.
      */
@@ -170,7 +160,6 @@ public class CaseConfig {
     /**
      * This method gets the target status of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the target status of the case being considered.
      */
     public Chromosome getTargetStatus() {
@@ -181,7 +170,6 @@ public class CaseConfig {
      * This method sets the trarget status of the case being considered using
      * the one specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param targetStatus the trarget status of the case being considered.
      */
     public void setTargetStatus(Chromosome targetStatus) {
@@ -191,7 +179,6 @@ public class CaseConfig {
     /**
      * This method gets the path and filename of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the path and filename of the case being considered.
      */
     public String getPathAndFileName() {
@@ -201,7 +188,6 @@ public class CaseConfig {
     /**
      * This method gets the filename of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the filename of the case being considered.
      */
     public String getFileName() {
@@ -216,7 +202,6 @@ public class CaseConfig {
      * This method sets the path and filename of the case being considered using
      * the one specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param pathAndFileName the path and filename of the case being
      * considered.
      */
@@ -228,7 +213,6 @@ public class CaseConfig {
      * This method returns whether the case being considered has been
      * initialized or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @return TRUE, if the case has been initialized. Otherwise, FALSE.
      */
     public boolean isInitialized() {
@@ -239,7 +223,6 @@ public class CaseConfig {
      * This method sets whether the case being considered has been initialized
      * or not, depending on the value of the parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param initialized whether the case being considered has been initialized
      * or not.
      */
@@ -251,7 +234,6 @@ public class CaseConfig {
      * This method returns whether the case being considered has been already
      * saved or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @return TRUE if the case has been already saved. Otherwise, FALSE.
      */
     public boolean isAlreadySaved() {
@@ -262,7 +244,6 @@ public class CaseConfig {
      * This method sets whether the case being considered has already been saved
      * or not, depending on the value of the parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param alreadySaved whether the case being considered has already been
      * saved or not.
      */
@@ -274,7 +255,6 @@ public class CaseConfig {
      * This method returns whether the case being considered has been modified
      * after saved or not.
      *
-     * @author Manuel Domínguez-Dorado
      * @return TRUE, if the case has been modified after saved. Otherwise,
      * FALSE.
      */
@@ -286,7 +266,6 @@ public class CaseConfig {
      * This method sets whether the case being considered has been modified
      * after saved or not, depending on the value of the parameter.
      *
-     * @author Manuel Domínguez-Dorado
      * @param modified whether the case being considered has been modified after
      * saved or not.
      */
@@ -297,7 +276,6 @@ public class CaseConfig {
     /**
      * This method gets the implementation group of the case being considered.
      *
-     * @author Manuel Domínguez-Dorado
      * @return the implementation group of the case being considered.
      */
     public ImplementationGroups getCurrentIG() {
@@ -308,7 +286,6 @@ public class CaseConfig {
      * This method sets the implementation group of the case being considered
      * using the one specified as an argument.
      *
-     * @author Manuel Domínguez-Dorado
      * @param currentIG the implementation group of the case being considered.
      */
     public void setCurrentIG(ImplementationGroups currentIG) {

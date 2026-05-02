@@ -46,53 +46,142 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a worker that executes FLECO algorithm from a swing GUI
- * without freezing it.
+ * Swing {@link SwingWorker} that executes a {@link FLECO} algorithm instance in
+ * a background thread to avoid freezing the GUI.
+ *
+ * <p>
+ * This worker runs {@link FLECO#evolve()} in {@link #doInBackground()} and,
+ * when finished (regardless of success, cancellation or failure), invokes
+ * {@link IFLECOGUI#afterOnRunFLECO()} on the configured GUI from the EDT via
+ * {@link SwingWorker#done()} (Swing guarantees {@code done()} runs on the
+ * EDT).</p>
+ *
+ * <p>
+ * <b>Validation</b>: constructor parameters are validated. If {@code fleco} or
+ * {@code gui} is {@code null} an {@link IllegalArgumentException} is logged and
+ * thrown.</p>
+ *
+ * <p>
+ * <b>Threading</b>: the worker executes {@code FLECO.evolve()} off the EDT. The
+ * {@code done()} callback is executed on the EDT as per SwingWorker
+ * contract.</p>
+ *
+ * <p>
+ * Instances are single-use: a {@code SwingWorker} must not be reused after
+ * execution.</p>
  *
  * @author Manuel Domínguez-Dorado
  */
-public class FLECOSwingWorker extends SwingWorker<FLECO, FLECO> {
+public final class FLECOSwingWorker extends SwingWorker<FLECO, FLECO> {
 
-    private FLECO fleco;
-    private IFLECOGUI gui;
-
-    private final Logger logger = LoggerFactory.getLogger(FLECOSwingWorker.class);
-    
     /**
-     * This is the constructor of the class. It creates a new instance and
-     * initialize its attributes with their default values.
-     *
-     * @param fleco The instance of FLECO algorithm to be run in background.
-     * @param gui The GUI from which FLECO is launched.
+     * Logger for diagnostics and validation failures.
      */
-    public FLECOSwingWorker(FLECO fleco, IFLECOGUI gui) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FLECOSwingWorker.class);
+
+    /**
+     * The FLECO algorithm instance to execute in background. Guaranteed
+     * non-null after construction.
+     */
+    private final FLECO fleco;
+
+    /**
+     * GUI callback used to update UI after the worker finishes. Guaranteed
+     * non-null after construction.
+     */
+    private final IFLECOGUI gui;
+
+    /**
+     * Creates a new worker that will execute the provided {@code fleco}
+     * instance and notify the provided {@code gui} when finished.
+     *
+     * @param fleco the {@link FLECO} instance to run in background (must not be
+     * {@code null})
+     * @param gui the GUI callback used to update UI after execution (must not
+     * be {@code null})
+     * @throws IllegalArgumentException if {@code fleco} or {@code gui} is
+     * {@code null}
+     */
+    public FLECOSwingWorker(final FLECO fleco, final IFLECOGUI gui) {
+        if (fleco == null) {
+            LOGGER.error("FLECOSwingWorker.<init>: fleco must not be null");
+            throw new IllegalArgumentException("fleco must not be null");
+        }
+        if (gui == null) {
+            LOGGER.error("FLECOSwingWorker.<init>: gui must not be null");
+            throw new IllegalArgumentException("gui must not be null");
+        }
         this.fleco = fleco;
         this.gui = gui;
     }
 
     /**
-     * This method executes the FLECO algorithm in background.
+     * Executes {@link FLECO#evolve()} in a background thread.
      *
-     * @return The executed instance of the FLECO algorithm.
-     * @throws Exception when something uncontrolled happens while computing in
-     * background.
+     * <p>
+     * If the worker is cancelled before or during execution, the method returns
+     * the {@link FLECO} instance without attempting further work. Any
+     * {@link Throwable} thrown by {@code fleco.evolve()} is logged and rethrown
+     * so SwingWorker's exception handling can surface it to callers of
+     * {@link #get()}.</p>
+     *
+     * @return the executed {@link FLECO} instance
+     * @throws Exception if an unexpected error occurs during execution
      */
     @Override
     protected FLECO doInBackground() throws Exception {
-        if (!isCancelled()) {
+        if (isCancelled()) {
+            LOGGER.debug("doInBackground: task was cancelled before start");
+            return fleco;
+        }
+
+        try {
             fleco.evolve();
+        } catch (Throwable t) {
+            LOGGER.error("doInBackground: unexpected error while evolving FLECO instance", t);
+            // Rethrow to allow SwingWorker to propagate the exception to callers of get()
+            if (t instanceof Exception) {
+                throw (Exception) t;
+            }
+            throw new Exception("Unexpected error while evolving FLECO", t);
         }
         return fleco;
     }
 
     /**
-     * This method is called when the background execution is finished. It calls
-     * a methoid of the GUI in order to update the corresponding components if
-     * needed.
+     * Called on the Event Dispatch Thread when background execution finishes.
+     *
+     * <p>
+     * This implementation always invokes {@link IFLECOGUI#afterOnRunFLECO()} to
+     * allow the GUI to update its state. Any runtime exception thrown by the
+     * GUI callback is caught and logged to avoid crashing the EDT.</p>
      */
     @Override
     protected void done() {
-        gui.afterOnRunFLECO();
+        try {
+            gui.afterOnRunFLECO();
+        } catch (Throwable t) {
+            LOGGER.error("done: exception while notifying GUI in afterOnRunFLECO()", t);
+            // Do not rethrow: done() runs on EDT and throwing would be harmful.
+        }
     }
 
+    /**
+     * Returns the {@link FLECO} instance associated with this worker.
+     *
+     * @return the non-null {@link FLECO} instance provided at construction time
+     */
+    public FLECO getFleco() {
+        return fleco;
+    }
+
+    /**
+     * Returns the GUI callback associated with this worker.
+     *
+     * @return the non-null {@link IFLECOGUI} instance provided at construction
+     * time
+     */
+    public IFLECOGUI getGui() {
+        return gui;
+    }
 }

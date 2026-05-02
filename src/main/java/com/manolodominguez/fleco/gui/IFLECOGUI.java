@@ -43,16 +43,38 @@ package com.manolodominguez.fleco.gui;
 import java.util.EventListener;
 
 /**
- * This interface has to be implemented by classess that want to receive
- * progress events from FLECO.
+ * GUI callback contract used by FLECO-related Swing workers and components.
+ *
+ * <p>
+ * Implementations of this interface receive a single lifecycle callback invoked
+ * by the UI layer once a FLECO execution has finished. The method is intended
+ * to be executed on the Swing Event Dispatch Thread (EDT) — callers should
+ * ensure they invoke it on the EDT when updating Swing components.</p>
+ *
+ * <p>
+ * Only one method is required which makes this interface suitable for use with
+ * lambda expressions where convenient.</p>
+ *
+ * <p>
+ * <b>Threading</b>: callers must ensure {@link #afterOnRunFLECO()} is invoked
+ * on the EDT if the implementation performs Swing updates. The interface itself
+ * does not impose threading semantics.</p>
  *
  * @author Manuel Domínguez Dorado
  */
+@FunctionalInterface
 public interface IFLECOGUI extends EventListener {
 
     /**
-     * This method, once implemented, will be called by a FLECO instance to
-     * advertise its current progress during its execution.
+     * Called by the UI or worker once a FLECO run has completed.
+     *
+     * <p>
+     * Implementations should perform any UI updates or follow-up actions
+     * required after FLECO finishes. Because most implementations will update
+     * Swing components, this method is expected to run on the Swing Event
+     * Dispatch Thread (EDT). If it is invoked from a background thread, the
+     * implementation should re-dispatch work to the EDT using
+     * {@code SwingUtilities.invokeLater(...)} or equivalent.</p>
      */
-    public void afterOnRunFLECO();
+    void afterOnRunFLECO();
 }

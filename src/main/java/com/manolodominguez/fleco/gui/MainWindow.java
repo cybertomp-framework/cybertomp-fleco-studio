@@ -216,6 +216,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * Initialize and wire the menu bar and its items.
      */
     private void initMenuBar() {
+        // First, a window icon is added.
+        setIconImage(ImageBroker.getInstance().getImage32x32(AvailableImages.WINDOW_ICON));
+
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 

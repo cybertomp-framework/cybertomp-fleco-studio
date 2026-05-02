@@ -8,21 +8,21 @@
     "componentbindings": [
         {
             "component": "cybertomp-fleco-library",
-            "version": "v1",
+            "version": "v2",
             "license": "LGPL_3_0_OR_LATER",
             "weight": "HIGH",
             "link": "DYNAMIC"
         },
         {
             "component": "unirest-java-core",
-            "version": "4.8.0",
+            "version": "4.8.1",
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"
         },
         {
             "component": "miglayout",
-            "version": "11.3",
+            "version": "11.4.3",
             "license": "BSD_3_CLAUSE",
             "weight": "HIGH",
             "link": "DYNAMIC"

@@ -7,7 +7,7 @@
         <everit-json-schema.version>1.14.6</everit-json-schema.version>
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
-        <unirest-java-core.version>4.8.0</unirest-java-core.version>
+        <unirest-java-core.version>4.8.1</unirest-java-core.version>
         <cybertomp-fleco-library.version>v2</cybertomp-fleco-library.version>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
@@ -33,7 +33,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manolodominguez</groupId>
     <artifactId>cybertomp-fleco-studio</artifactId>
-    <version>v2</version>
+    <version>v3</version>
     <packaging>jar</packaging>
     <name>CyberTOMP® FLECO Studio</name>
     <description>CyberTOMP® FLECO Studio is a standalone GUI for CyberTOMP® FLECO Library, a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With CyberTOMP® FLECO Library, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>

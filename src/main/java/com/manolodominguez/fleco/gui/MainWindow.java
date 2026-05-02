@@ -57,8 +57,6 @@ import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -263,7 +261,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         menuCaseItemSaveAs.setEnabled(false);
         menuCaseItemSaveAs.addActionListener(e -> onSaveAs());
 
-        menuCaseItemRunFLECO = new JMenuItem("Run FLECO");
+        menuCaseItemRunFLECO = new JMenuItem("Run FLECO algorithm");
         menuCaseItemRunFLECO.setMnemonic('R');
         menuCaseItemRunFLECO.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
         menuCaseItemRunFLECO.setIcon(imageBroker.getImageIcon16x16(AvailableImages.RUN));
@@ -289,13 +287,13 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         menuAbout.setMnemonic('A');
         menuBar.add(menuAbout);
 
-        menuAboutItemAbout = new JMenuItem("About FLECO");
+        menuAboutItemAbout = new JMenuItem("About CyberTOMP® FLECO Studio");
         menuAboutItemAbout.setMnemonic('b');
         menuAboutItemAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         menuAboutItemAbout.setIcon(imageBroker.getImageIcon16x16(AvailableImages.ABOUT));
         menuAboutItemAbout.addActionListener(e -> onAbout());
 
-        menuAboutItemLicense = new JMenuItem("FLECO license");
+        menuAboutItemLicense = new JMenuItem("CyberTOMP® FLECO Studio license");
         menuAboutItemLicense.setMnemonic('F');
         menuAboutItemLicense.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
         menuAboutItemLicense.setIcon(imageBroker.getImageIcon16x16(AvailableImages.LICENSE));

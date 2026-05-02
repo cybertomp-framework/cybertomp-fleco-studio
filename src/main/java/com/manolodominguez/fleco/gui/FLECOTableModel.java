@@ -118,7 +118,7 @@ public class FLECOTableModel extends AbstractTableModel {
      * Strategic constraints applied to the case. Guaranteed non-null after
      * construction.
      */
-    private StrategicConstraints strategicConstraints;
+    private transient StrategicConstraints strategicConstraints;
 
     /**
      * Implementation group used to determine applicable
@@ -134,7 +134,7 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * Initial status chromosome (may be null after removeInitialStatus).
      */
-    private Chromosome initialStatus;
+    private transient Chromosome initialStatus;
 
     /**
      * Cached computed values for initial status.
@@ -147,7 +147,7 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * Optional target status chromosome.
      */
-    private Chromosome targetStatus;
+    private transient Chromosome targetStatus;
 
     /**
      * Cached computed values for target status.
@@ -160,7 +160,7 @@ public class FLECOTableModel extends AbstractTableModel {
     /**
      * Optional single listener notified when the model changes.
      */
-    private IFLECOTableModelChangeListener changeEventListener;
+    private transient IFLECOTableModelChangeListener changeEventListener;
 
     /**
      * Metric type used internally to simplify constraint/setting logic.

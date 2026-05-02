@@ -41,41 +41,110 @@
 package com.manolodominguez.fleco.gui;
 
 import com.manolodominguez.fleco.events.ProgressEvent;
-import javax.swing.JProgressBar;
 import com.manolodominguez.fleco.events.IFLECOProgressEventListener;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a progress bar that also is able to receive
- * progressevents from an instance of FLECO algorithm.
+ * Swing progress bar that listens to {@link ProgressEvent} notifications
+ * emitted by the FLECO algorithm and updates its value accordingly.
+ *
+ * <p>
+ * This component expects {@link ProgressEvent#getProgressPercentage()} to
+ * return a double value in the range [0.0, 1.0]. Received values are validated,
+ * clamped to the valid range and converted to an integer percentage (0-100)
+ * before updating the UI.</p>
+ *
+ * <p>
+ * <b>Threading</b>: UI updates are always performed on the Swing Event Dispatch
+ * Thread (EDT). If an event arrives on a non-EDT thread the update is scheduled
+ * via {@link SwingUtilities#invokeLater(Runnable)}.</p>
+ *
+ * <p>
+ * Null or invalid events are rejected: the listener logs the problem and throws
+ * an appropriate runtime exception to make failures visible to callers.</p>
+ *
+ * <p>
+ * Instances are mutable and not thread-safe for concurrent mutation; however,
+ * event handling ensures safe UI updates.</p>
  *
  * @author Manuel Domínguez-Dorado
  */
 public class FLECOProgressBar extends JProgressBar implements IFLECOProgressEventListener {
 
+    /**
+     * Serialization identifier for this Swing component.
+     */
     private static final long serialVersionUID = 1L;
 
-    private final Logger logger = LoggerFactory.getLogger(FLECOProgressBar.class);
-    
     /**
-     * This is the constructor of the class. it creates a new instance of
-     * FLECOProgressBar and initialize its attributes.
+     * Logger for diagnostics and validation failures.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(FLECOProgressBar.class);
+
+    /**
+     * Creates a new {@code FLECOProgressBar} with default configuration.
+     *
+     * <p>
+     * The progress value range is 0..100 as per {@link JProgressBar} default
+     * model.</p>
      */
     public FLECOProgressBar() {
         super();
     }
 
     /**
-     * This class is called when an instance of FLECO algorithm this progress
-     * bar is subscribed to, send a progress event.
+     * Called when a {@link ProgressEvent} is received from the FLECO algorithm.
      *
-     * @param progressEvent the progress event sent by amn instance of FLECO
-     * algorithm.
+     * <p>
+     * The method validates the incoming event, clamps the progress percentage
+     * to the [0.0, 1.0] range, converts it to an integer percentage (0-100) and
+     * updates the progress bar value on the Swing Event Dispatch Thread.</p>
+     *
+     * <p>
+     * Validation policy:
+     * <ul>
+     * <li>If {@code progressEvent} is {@code null} a
+     * {@link NullPointerException} is thrown.</li>
+     * <li>If the reported percentage is {@code NaN} or infinite it is treated
+     * as 0.0 and a warning is logged.</li>
+     * </ul>
+     * </p>
+     *
+     * @param progressEvent the progress event sent by an instance of FLECO
+     * algorithm
+     * @throws NullPointerException if {@code progressEvent} is {@code null}
      */
     @Override
-    public void onProgressEventReceived(ProgressEvent progressEvent) {
-        setValue((int) (progressEvent.getProgressPercentage() * 100));
-    }
+    public void onProgressEventReceived(final ProgressEvent progressEvent) {
+        if (progressEvent == null) {
+            LOGGER.error("onProgressEventReceived: progressEvent cannot be null");
+            throw new NullPointerException("progressEvent cannot be null");
+        }
 
+        double pct = progressEvent.getProgressPercentage();
+
+        if (Double.isNaN(pct) || Double.isInfinite(pct)) {
+            LOGGER.warn("onProgressEventReceived: received invalid progress percentage (NaN/Infinite). Treating as 0.0");
+            pct = 0.0;
+        }
+
+        if (pct < 0.0) {
+            LOGGER.debug("onProgressEventReceived: progress percentage {} below 0.0, clamping to 0.0", pct);
+            pct = 0.0;
+        } else if (pct > 1.0) {
+            LOGGER.debug("onProgressEventReceived: progress percentage {} above 1.0, clamping to 1.0", pct);
+            pct = 1.0;
+        }
+
+        final int value = (int) Math.round(pct * 100.0);
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            setValue(value);
+        } else {
+            SwingUtilities.invokeLater(() -> setValue(value));
+        }
+    }
 }

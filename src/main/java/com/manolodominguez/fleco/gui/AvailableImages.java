@@ -40,9 +40,6 @@
  */
 package com.manolodominguez.fleco.gui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Enum that defines all available image resources used in FLECO Studio.
  *

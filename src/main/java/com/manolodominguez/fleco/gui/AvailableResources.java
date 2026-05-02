@@ -40,43 +40,59 @@
  */
 package com.manolodominguez.fleco.gui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * This is an enum implementation to identify all available resources that can
- * be used in FLECO.
+ * Enumeration of all available internal resources used by FLECO.
  *
- * @author Manuel Domínguez-Dorado
+ * <p>
+ * This enum centralizes access to classpath-based resources (such as JSON
+ * schemas) to avoid scattering string literals across the codebase and to
+ * improve maintainability and consistency.
+ * </p>
  */
 public enum AvailableResources {
+
+    /**
+     * JSON schema used to validate FLECO case files.
+     */
     FLECO_JSON_SCHEMA("FLECOJSONSchema.json");
 
+    /**
+     * Base classpath directory where all FLECO resources are located.
+     */
+    private static final String RESOURCES_PATH = "/com/manolodominguez/fleco/json/";
+
+    /**
+     * File name of the resource associated with this enum constant.
+     */
     private final String resourceFileName;
 
-    private final Logger logger = LoggerFactory.getLogger(AvailableResources.class);
-    
     /**
-     * This is the constructor of the enum. It creates a new enum item and
-     * associates a filename to it.
+     * Creates a new resource enum constant.
      *
-     * @param resourceFileName the filename that corresponds to the new
-     * available resource created.
+     * @param resourceFileName the file name of the resource. Must not be
+     * {@code null} or empty.
+     * @throws IllegalArgumentException if {@code resourceFileName} is null or
+     * empty
      */
-    private AvailableResources(String resourceFileName) {
+    AvailableResources(final String resourceFileName) {
+        if (resourceFileName == null || resourceFileName.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "resourceFileName cannot be null or empty");
+        }
         this.resourceFileName = resourceFileName;
     }
 
     /**
-     * This methods gets the complete file path to the resource associated to
-     * the enum item.
+     * Returns the full classpath location of the resource.
      *
-     * @return the complete file path to the resource associated to the enum
-     * item.
+     * <p>
+     * The returned path is intended for use with {@code ClassLoader}
+     * resource-loading mechanisms.
+     * </p>
+     *
+     * @return the full classpath resource path
      */
     public String getResource() {
-        return AvailableResources.RESOURCES_PATH + resourceFileName;
+        return RESOURCES_PATH + resourceFileName;
     }
-
-    private static final String RESOURCES_PATH = "/com/manolodominguez/fleco/json/";
 }

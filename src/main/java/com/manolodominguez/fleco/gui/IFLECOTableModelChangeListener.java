@@ -43,16 +43,36 @@ package com.manolodominguez.fleco.gui;
 import java.util.EventListener;
 
 /**
- * This interface has to be implemented by classess that want to receive events
- * when a FLECO table model changes.
+ * Listener contract for clients that want to be notified when a
+ * {@code FLECOTableModel} has changed.
+ *
+ * <p>
+ * Implementations receive a single callback {@link #onFLECOTableModelChanged()}
+ * which is invoked by the table model after any change that should cause the UI
+ * or other components to refresh. The callback is expected to be executed on
+ * the Swing Event Dispatch Thread (EDT) by the caller; if an implementation
+ * performs Swing updates and is invoked off the EDT it should re-dispatch work
+ * to the EDT (for example using {@code SwingUtilities.invokeLater(...)}) to
+ * avoid threading issues.</p>
+ *
+ * <p>
+ * Only one method is required which makes this interface suitable for use with
+ * lambda expressions where convenient.</p>
  *
  * @author Manuel Domínguez Dorado
  */
+@FunctionalInterface
 public interface IFLECOTableModelChangeListener extends EventListener {
 
     /**
-     * This method, once implemented, will be called by a FLECO table model to
-     * adversise that at least one of their values has changed.
+     * Invoked by {@code FLECOTableModel} to advertise that at least one value
+     * has changed and interested parties should refresh their view or state.
+     *
+     * <p>
+     * Implementations should be resilient to repeated calls and should avoid
+     * performing long-running work on the calling thread. Exceptions thrown by
+     * implementations should be handled by the caller to avoid disrupting the
+     * model's control flow.</p>
      */
-    public void onFLECOTableModelChanged();
+    void onFLECOTableModelChanged();
 }

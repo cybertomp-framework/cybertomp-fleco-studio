@@ -1,14 +1,14 @@
 {
     "projectinfo": {
         "name": "cybertomp-fleco-studio",
-        "version": "v2-SNAPSHOT",
+        "version": "v3",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
     },
     "componentbindings": [
         {
             "component": "cybertomp-fleco-library",
-            "version": "v2",
+            "version": "v3",
             "license": "LGPL_3_0_OR_LATER",
             "weight": "HIGH",
             "link": "DYNAMIC"
